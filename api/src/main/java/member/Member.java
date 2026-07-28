@@ -1,4 +1,4 @@
-package member;
+package pl.omnisport.api.member;
 
 import jakarta.persistence.*;
 
