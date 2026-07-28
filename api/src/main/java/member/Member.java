@@ -34,6 +34,7 @@ public class Member {
     @NotBlank(message = "Section cannot be blank")
     private String section;
 
+    @Column(name = "is_pass_valid")
     private boolean isPassValid;
 
     @NotNull(message = "Expiry date cannot be null")
