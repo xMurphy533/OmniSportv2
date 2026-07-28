@@ -1,10 +1,10 @@
 package pl.omnisport.api.member;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,8 +30,11 @@ public class MemberService {
     }
 
     public void extendPassValidity(Long memberId){
-        Member member = memberRepository.findById(memberId).orElseThrow();
+        Member member = memberRepository.findById(memberId).orElseThrow(
+                () -> new EntityNotFoundException("Member not found"));
+
         LocalDate newDatePassValidity = LocalDate.now().plusMonths(1);
         member.setExpiryDate(newDatePassValidity);
+        memberRepository.save(member);
     }
 }
