@@ -1,5 +1,6 @@
 package pl.omnisport.api.coach;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -24,20 +25,21 @@ public class Coach {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "name cannot be blank")
+    @NotBlank(message = "Name cannot be blank")
     private String name;
 
-    @NotBlank(message = "surname cannot be blank")
+    @NotBlank(message = "Surname cannot be blank")
     private String surname;
 
-    @NotNull(message = "age cannot be null")
-    @Min(value = 18, message = "age must be 18 or higher")
+    @NotNull(message = "Age cannot be null")
+    @Min(value = 18, message = "Age must be 18 or higher")
     private Integer age;
 
-    @NotBlank(message = "specialization cannot be blank")
+    @NotBlank(message = "Specialization cannot be blank")
     private String specialization;
 
     @OneToMany(mappedBy = "coach")
-    @ToString.Exclude //to po to żeby uniknąć nieskończonej pętli
+    @JsonIgnore //to po to żeby uniknąć błędu typu 500
+    @ToString.Exclude //to po to żeby uniknąć nieskończonej pętli w konsoli
     private List<Member> mentees;
 }
