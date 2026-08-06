@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import pl.omnisport.api.coach.Coach;
 
 import java.time.LocalDate;
 
@@ -39,4 +40,8 @@ public class Member {
 
     @NotNull(message = "Expiry date cannot be null")
     private LocalDate expiryDate;
+
+    @ManyToOne
+    @JoinColumn(name = "coach_id")
+    private Coach coach;
 }
