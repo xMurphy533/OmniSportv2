@@ -1,9 +1,14 @@
 package pl.omnisport.api.member;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
@@ -18,7 +23,7 @@ public class MemberController {
     }
 
     @PostMapping
-    public void addNewMember(@RequestBody Member member){
+    public void addNewMember(@Valid @RequestBody Member member){
         memberService.saveNewMember(member);
     }
 
@@ -28,7 +33,12 @@ public class MemberController {
     }
 
     @PatchMapping("/{id}/extend-pass")
-    public void extendPassValidity(@PathVariable Long id){
-        memberService.extendPassValidity(id);
+    public ResponseEntity<Void> extendPassValidity(@PathVariable Long id){
+        try{
+            memberService.extendPassValidity(id);
+            return ResponseEntity.noContent().build();
+        } catch (NoSuchElementException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Member not found");
+        }
     }
 }
