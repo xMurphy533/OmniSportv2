@@ -25,6 +25,15 @@ public class MemberService {
         return memberRepository.findById(memberId);
     }
 
+    public Member updateMember(Long memberId, Member member){
+        if(!memberRepository.existsById(memberId)){
+            throw new EntityNotFoundException("Member not found");
+        }
+
+        member.setId(memberId);
+        return memberRepository.save(member);
+    }
+
     public void removeMember(Long memberId){
         memberRepository.deleteById(memberId);
     }
