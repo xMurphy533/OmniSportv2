@@ -24,7 +24,7 @@ public class CoachService {
         return coachRepository.findById(id);
     }
 
-    public void editCoachsSpec(Long id, String newSpec){
+    public void updateCoachSpecialization(Long id, String newSpec){
         Coach coach = getCoachById(id).orElseThrow(
                 () -> new EntityNotFoundException("Coach not found")
         );
