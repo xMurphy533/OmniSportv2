@@ -1,10 +1,10 @@
 package pl.omnisport.api.admin;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -44,6 +44,8 @@ public class Admin {
 
     @NotBlank(message = "Password cannot be blank")
     @Column(nullable = false)
+    @JsonIgnore
+    @ToString.Exclude
     private String password;
 
     @NotNull(message = "Role cannot be null")
@@ -54,11 +56,9 @@ public class Admin {
     @Column(nullable = false)
     private boolean isActive;
 
-    @NotNull
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
     private LocalDate createdAt;
 
-    @NotNull
-    @Column(nullable = false)
+    @Column
     private LocalDate lastLoginAt;
 }
