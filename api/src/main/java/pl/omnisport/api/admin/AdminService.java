@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,8 +19,22 @@ public class AdminService {
         adminRepository.save(admin);
     }
 
-    public Optional<Admin> findByEmail(String email){
-        return adminRepository.findByEmail(email);
+    public List<Admin> getAllAdmins(){
+        return adminRepository.findAll();
+    }
+
+    public Optional<Admin> findAdminById(Long id){
+        Admin admin = adminRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Admin not found")
+        );
+        return Optional.of(admin);
+    }
+
+    public Optional<Admin> findAdminByEmail(String email){
+        Admin admin = adminRepository.findByEmail(email).orElseThrow(
+                () -> new EntityNotFoundException("Admin not found")
+        );
+        return Optional.of(admin);
     }
 
     @org.springframework.transaction.annotation.Transactional
