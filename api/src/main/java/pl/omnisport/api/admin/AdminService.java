@@ -12,11 +12,10 @@ import java.util.Optional;
 public class AdminService {
     private final AdminRepository adminRepository;
 
-    @org.springframework.transaction.annotation.Transactional
     public void registerNewAdmin(Admin admin) {
         admin.setCreatedAt(LocalDate.now());
         admin.setActive(true);
-
+        adminRepository.save(admin);
     }
 
     public Optional<Admin> findByEmail(String email){
