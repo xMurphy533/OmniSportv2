@@ -3,6 +3,10 @@ package pl.omnisport.api.member;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import pl.omnisport.api.admin.MemberMapper;
+import pl.omnisport.api.coach.Coach;
+import pl.omnisport.api.coach.CoachRepository;
+import pl.omnisport.api.coach.MemberRequest;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -12,8 +16,15 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final CoachRepository coachRepository;
+    private final MemberMapper memberMapper;
 
-    public void saveNewMember(Member member){
+    public void saveNewMember(MemberRequest request){
+        Member member = memberMapper.toEntity(request);
+        Coach coach = coachRepository.findById(request.getCoachId()).orElseThrow(
+                () -> new EntityNotFoundException("Coach not found")
+        );
+        member.setCoach(coach);
         memberRepository.save(member);
     }
 

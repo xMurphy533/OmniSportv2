@@ -1,6 +1,7 @@
 package pl.omnisport.api.admin;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,27 +13,30 @@ import java.util.Optional;
 @RequestMapping("/api/admins")
 public class AdminController {
     private final AdminService adminService;
+    private final AdminMapper adminMapper;
 
     //CREATE
     @PostMapping
-    public void addNewAdmin(Admin admin){
+    public void addNewAdmin(@Valid @RequestBody AdminRequest request){
+        Admin admin = adminMapper.toEntity(request);
         adminService.registerNewAdmin(admin);
     }
 
     //READ
     @GetMapping
-    public List<Admin> getAllAdmins(){
-        return adminService.getAllAdmins();
+    public List<AdminResponse> getAllAdmins(){
+        List<Admin> admins = adminService.getAllAdmins();
+        return adminMapper.toResponseList(admins);
     }
 
     @GetMapping("/{id}")
-    public Optional<Admin> getAdminById(@PathVariable Long id) throws EntityNotFoundException{
-        return adminService.findAdminById(id);
+    public Optional<AdminResponse> getAdminById(@PathVariable Long id) throws EntityNotFoundException{
+        return adminService.findAdminById(id).map(adminMapper::toResponse);
     }
 
     @GetMapping("/search")
-    public Optional<Admin> getAdminByEmail(@RequestParam String email) throws EntityNotFoundException{
-        return adminService.findAdminByEmail(email);
+    public Optional<AdminResponse> getAdminByEmail(@RequestParam String email) throws EntityNotFoundException{
+        return adminService.findAdminByEmail(email).map(adminMapper::toResponse);
     }
 
     //UPDATE
