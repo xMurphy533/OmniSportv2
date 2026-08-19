@@ -3,6 +3,7 @@ package pl.omnisport.api.admin;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import pl.omnisport.api.exception.SelfDeletionNotAllowedException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -40,7 +41,7 @@ public class AdminService {
     @org.springframework.transaction.annotation.Transactional
     public void deactivateAdmin(Long targetId, Long currentAdminId){
         if(targetId.equals(currentAdminId))
-            throw new IllegalStateException("You cannot deactivate your account");
+            throw new SelfDeletionNotAllowedException("You cannot deactivate your account");
 
         Admin admin = adminRepository.findById(targetId).orElseThrow(
                 () -> new EntityNotFoundException("Admin not found")

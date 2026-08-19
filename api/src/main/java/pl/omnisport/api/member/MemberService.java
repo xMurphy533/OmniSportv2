@@ -40,7 +40,6 @@ public class MemberService {
         if(!memberRepository.existsById(memberId)){
             throw new EntityNotFoundException("Member not found");
         }
-
         member.setId(memberId);
         return memberRepository.save(member);
     }
