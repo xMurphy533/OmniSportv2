@@ -6,32 +6,35 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import pl.omnisport.api.admin.CoachMapper;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/coaches")
 @RequiredArgsConstructor
 public class CoachController {
     private final CoachService coachService;
+    private final CoachMapper coachMapper;
 
     //CREATE
     @PostMapping
-    public void addNewCoach(@Valid @RequestBody Coach coach){
+    public void addNewCoach(@Valid @RequestBody CoachRequest request){
+        Coach coach = coachMapper.toEntity(request);
         coachService.saveNewCoach(coach);
     }
 
     //READ
     @GetMapping
-    public List<Coach> getAllCoaches(){
-        return coachService.getAllCoaches();
+    public List<CoachResponse> getAllCoaches(){
+        List<Coach> coaches = coachService.getAllCoaches();
+        return coachMapper.toResponseList(coaches);
     }
 
     @GetMapping("/{id}")
-    public Coach getCoachById(@PathVariable Long id){
-        return coachService.getCoachById(id).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Coach not found")
-        );
+    public Optional<CoachResponse> getCoachById(@PathVariable Long id) throws EntityNotFoundException{
+        return coachService.getCoachById(id).map(coachMapper::toResponse);
     }
 
     //UPDATE
