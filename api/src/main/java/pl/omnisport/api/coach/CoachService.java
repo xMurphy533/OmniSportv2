@@ -27,16 +27,13 @@ public class CoachService {
     }
 
     public void updateCoachSpecialization(Long id, String newSpec) {
-        if (newSpec == null || newSpec.isBlank()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Specialization cannot be blank");}
-
-            Coach coach = getCoachById(id).orElseThrow(
-                    () -> new EntityNotFoundException("Coach not found")
-            );
-            coach.setSpecialization(newSpec);
-            coachRepository.save(coach);
-
+        Coach coach = getCoachById(id).orElseThrow(
+                () -> new EntityNotFoundException("Coach not found")
+        );
+        coach.setSpecialization(newSpec);
+        coachRepository.save(coach);
         }
+
         public void removeCoach (Long id){
             Coach coach = getCoachById(id).orElseThrow(
                     () -> new EntityNotFoundException("Coach not found")
