@@ -2,14 +2,15 @@ package pl.omnisport.api.member;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import pl.omnisport.api.admin.MemberMapper;
 import pl.omnisport.api.coach.Coach;
 import pl.omnisport.api.coach.CoachRepository;
 import pl.omnisport.api.coach.MemberRequest;
 
+import org.springframework.data.domain.Pageable;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -28,8 +29,8 @@ public class MemberService {
         memberRepository.save(member);
     }
 
-    public List<Member> getAllMembers(){
-        return memberRepository.findAll();
+    public Page<Member> getAllMembers(Pageable pageable){
+        return memberRepository.findAll(pageable);
     }
 
     public Optional<Member> getMemberById(Long memberId){

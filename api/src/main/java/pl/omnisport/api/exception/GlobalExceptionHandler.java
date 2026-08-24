@@ -2,6 +2,7 @@ package pl.omnisport.api.exception;
 
 import io.swagger.v3.oas.annotations.Hidden;
 import org.hibernate.action.internal.EntityActionVetoException;
+import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -28,5 +29,15 @@ public class GlobalExceptionHandler {
                 e.getMessage()
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(org.springframework.data.mapping.PropertyReferenceException.class)
+    public ResponseEntity<ErrorResponse> handlePropertyReferenceException(org.springframework.data.mapping.PropertyReferenceException e){
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                "Cannot sort the results. Invalid field name provided: " + e.getPropertyName()
+        );
+        return  new ResponseEntity<>(errorResponse,HttpStatus.BAD_REQUEST);
     }
 }

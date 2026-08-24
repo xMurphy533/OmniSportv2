@@ -3,6 +3,9 @@ package pl.omnisport.api.admin;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,9 +27,10 @@ public class AdminController {
 
     //READ
     @GetMapping
-    public List<AdminResponse> getAllAdmins(){
-        List<Admin> admins = adminService.getAllAdmins();
-        return adminMapper.toResponseList(admins);
+    public ResponseEntity<Page<AdminResponse>> getAllAdmins(Pageable pageable){
+        Page<Admin> adminPage = adminService.getAllAdmins(pageable);
+        Page<AdminResponse> responsePage = adminPage.map(adminMapper::toResponse);
+        return ResponseEntity.ok(responsePage);
     }
 
     @GetMapping("/{id}")
