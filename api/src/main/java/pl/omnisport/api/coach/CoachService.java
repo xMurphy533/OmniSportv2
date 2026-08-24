@@ -2,6 +2,8 @@ package pl.omnisport.api.coach;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -18,8 +20,8 @@ public class CoachService {
         coachRepository.save(coach);
     }
 
-    public List<Coach> getAllCoaches() {
-        return coachRepository.findAll();
+    public Page<Coach> getAllCoaches(Pageable pageable) {
+        return coachRepository.findAll(pageable);
     }
 
     public Optional<Coach> getCoachById(Long id) {

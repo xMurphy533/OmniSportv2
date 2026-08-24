@@ -3,6 +3,7 @@ package pl.omnisport.api.member;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +12,7 @@ import pl.omnisport.api.admin.MemberMapper;
 import pl.omnisport.api.coach.MemberRequest;
 import pl.omnisport.api.coach.MemberResponse;
 
-import java.util.List;
+import org.springframework.data.domain.Pageable;
 import java.util.Optional;
 
 @RestController
@@ -22,9 +23,10 @@ public class MemberController {
     private final MemberMapper memberMapper;
 
     @GetMapping
-    public List<MemberResponse> getAllMembers(){
-        List<Member> members = memberService.getAllMembers();
-        return memberMapper.toResponseList(members);
+    public ResponseEntity<Page<MemberResponse>> getAllMembers(Pageable pageable){
+        Page<Member> memberPage = memberService.getAllMembers(pageable);
+        Page<MemberResponse> responsePage = memberPage.map(memberMapper::toResponse);
+        return ResponseEntity.ok(responsePage);
     }
 
     @GetMapping("/{id}")

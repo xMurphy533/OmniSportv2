@@ -3,10 +3,15 @@ package pl.omnisport.api.coach;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import pl.omnisport.api.admin.CoachMapper;
+import pl.omnisport.api.member.Member;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,9 +32,10 @@ public class CoachController {
 
     //READ
     @GetMapping
-    public List<CoachResponse> getAllCoaches(){
-        List<Coach> coaches = coachService.getAllCoaches();
-        return coachMapper.toResponseList(coaches);
+    public ResponseEntity<Page<CoachResponse>> getAllCoaches(Pageable pageable){
+        Page<Coach> coachPage = coachService.getAllCoaches(pageable);
+        Page<CoachResponse> responsePage = coachPage.map(coachMapper::toResponse);
+        return ResponseEntity.ok(responsePage);
     }
 
     @GetMapping("/{id}")
