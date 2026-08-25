@@ -207,8 +207,6 @@ class AdminServiceTest {
         verify(adminRepository).findById(targetAdminId);
     }
 
-    // ==================== RECORD LOGIN TESTS ====================
-
     @Test
     void shouldRecordLoginAndUpdateLastLoginDate() {
         // GIVEN
