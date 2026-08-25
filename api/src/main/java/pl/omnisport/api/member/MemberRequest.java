@@ -1,4 +1,4 @@
-package pl.omnisport.api.coach;
+package pl.omnisport.api.member;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

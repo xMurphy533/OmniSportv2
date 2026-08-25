@@ -8,9 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import pl.omnisport.api.admin.MemberMapper;
-import pl.omnisport.api.coach.MemberRequest;
-import pl.omnisport.api.coach.MemberResponse;
+import pl.omnisport.api.member.MemberMapper;
+import pl.omnisport.api.member.MemberRequest;
+import pl.omnisport.api.member.MemberResponse;
 
 import org.springframework.data.domain.Pageable;
 import java.util.Optional;
