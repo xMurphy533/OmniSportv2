@@ -1,9 +1,10 @@
-package pl.omnisport.api.coach;
+package pl.omnisport.api.member;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import pl.omnisport.api.coach.Coach;
 
 @Getter
 @Setter

@@ -1,10 +1,10 @@
-package pl.omnisport.api.admin;
+package pl.omnisport.api.member;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import pl.omnisport.api.coach.*;
-import pl.omnisport.api.coach.MemberRequest;
-import pl.omnisport.api.coach.MemberResponse;
+import pl.omnisport.api.member.MemberRequest;
+import pl.omnisport.api.member.MemberResponse;
 import pl.omnisport.api.member.Member;
 
 import java.util.List;

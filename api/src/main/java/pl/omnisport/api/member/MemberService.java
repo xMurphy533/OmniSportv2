@@ -4,10 +4,10 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
-import pl.omnisport.api.admin.MemberMapper;
+import pl.omnisport.api.member.MemberMapper;
 import pl.omnisport.api.coach.Coach;
 import pl.omnisport.api.coach.CoachRepository;
-import pl.omnisport.api.coach.MemberRequest;
+import pl.omnisport.api.member.MemberRequest;
 
 import org.springframework.data.domain.Pageable;
 import java.time.LocalDate;
