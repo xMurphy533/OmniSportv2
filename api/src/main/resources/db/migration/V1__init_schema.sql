@@ -25,7 +25,7 @@ CREATE TABLE members (
     age INT NOT NULL,
     section VARCHAR(255) NOT NULL,
     is_pass_valid BOOLEAN NOT NULL,
-    expiry_date DATE NOT NULL,
+    expiry_date DATE,
     coach_id BIGINT,
     CONSTRAINT fk_coach FOREIGN KEY (coach_id) REFERENCES coaches(id)
 );
