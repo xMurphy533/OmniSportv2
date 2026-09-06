@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import pl.omnisport.api.coach.Coach;
+import pl.omnisport.api.user.AppUser;
 
 import java.time.LocalDate;
 
@@ -21,6 +22,10 @@ public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private AppUser appUser;
 
     @NotBlank(message = "Name cannot be blank")
     private String name;

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pl.omnisport.api.coach.Coach;
+import pl.omnisport.api.coach.CoachResponse;
 
 @Getter
 @Setter
@@ -19,5 +20,5 @@ public class MemberResponse {
 
     private String section;
 
-    private Coach coach;
+    private CoachResponse coach;
 }

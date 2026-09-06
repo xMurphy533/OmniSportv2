@@ -4,16 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pl.omnisport.api.admin.Admin.AdminRole;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegisterRequest {
+public class AdminRegisterRequest {
     private String name;
     private String surname;
-    private Integer age;
     private String email;
     private String password;
-    private String section;
+    private AdminRole adminRole;
 }

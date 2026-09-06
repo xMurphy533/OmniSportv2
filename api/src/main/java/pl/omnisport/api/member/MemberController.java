@@ -6,13 +6,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import pl.omnisport.api.member.MemberMapper;
-import pl.omnisport.api.member.MemberRequest;
-import pl.omnisport.api.member.MemberResponse;
 
 import org.springframework.data.domain.Pageable;
+import pl.omnisport.api.auth.MemberRegisterRequest;
+
 import java.util.Optional;
 
 @RestController
@@ -23,6 +23,7 @@ public class MemberController {
     private final MemberMapper memberMapper;
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Page<MemberResponse>> getAllMembers(Pageable pageable){
         Page<Member> memberPage = memberService.getAllMembers(pageable);
         Page<MemberResponse> responsePage = memberPage.map(memberMapper::toResponse);
@@ -30,12 +31,14 @@ public class MemberController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public Optional<MemberResponse> getMemberById(@PathVariable Long id) throws EntityNotFoundException{
         return memberService.getMemberById(id).map(memberMapper::toResponse);
     }
 
     @PostMapping
-    public void addNewMember(@Valid @RequestBody MemberRequest request){
+    @PreAuthorize("hasAnyRole('ADMIN', 'COACH')")
+    public void addNewMember(@Valid @RequestBody MemberRegisterRequest request){
         memberService.saveNewMember(request);
     }
 
@@ -50,11 +53,13 @@ public class MemberController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteMember(@PathVariable Long id){
         memberService.removeMember(id);
     }
 
     @PatchMapping("/{id}/extend-pass")
+    @PreAuthorize("hasAnyRole('ADMIN', 'COACH')")
     public ResponseEntity<Void> extendPassValidity(@PathVariable Long id){
         try{
             memberService.extendPassValidity(id);

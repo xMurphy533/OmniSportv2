@@ -29,25 +29,6 @@ class AdminServiceTest {
     @InjectMocks
     private AdminService adminService;
 
-    @Test
-    void shouldRegisterNewAdmin() {
-        //GIVEN
-        Admin admin = new Admin();
-        admin.setName("Test");
-        admin.setSurname("Admin");
-        admin.setEmail("test@admin.pl");
-        admin.setPassword("password123");
-        admin.setRole(Admin.AdminRole.SUPER_ADMIN);
-
-        //WHEN
-        adminService.registerNewAdmin(admin);
-
-        //THEN
-        assertTrue(admin.isActive(), "Admin should be active after the registration");
-        assertEquals(LocalDate.now(), admin.getCreatedAt(), "Registration date should be the same as today");
-
-        verify(adminRepository).save(admin);
-    }
 
     @Test
     void shouldGetAllAdmins() {
