@@ -2,6 +2,7 @@ package pl.omnisport.api.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import pl.omnisport.api.admin.Admin;
@@ -12,6 +13,7 @@ import pl.omnisport.api.user.Role;
 
 @Component
 @RequiredArgsConstructor
+@Profile("dev")
 public class DatabaseSeeder implements CommandLineRunner {
     private final AppUserRepository appUserRepository;
     private final AdminRepository adminRepository;
