@@ -45,8 +45,9 @@ public class CoachController {
 
     //UPDATE
     @PatchMapping("/{id}/specialization")
-    public void updateCoachSpecialization(@PathVariable Long id, @RequestParam String newSpecialization){
-        coachService.updateCoachSpecialization(id, newSpecialization);
+    public ResponseEntity<Void> updateSpecialization(@PathVariable Long id, @RequestBody UpdateSpecializationRequest request){
+        coachService.updateCoachSpecialization(id, request.newSpecialization());
+        return ResponseEntity.ok().build();
     }
 
     //DELETE

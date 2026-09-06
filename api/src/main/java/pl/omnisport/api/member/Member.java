@@ -38,7 +38,7 @@ public class Member {
     @Column(name = "is_pass_valid")
     private boolean isPassValid;
 
-    @NotNull(message = "Expiry date cannot be null")
+    @Column(nullable = true)
     private LocalDate expiryDate;
 
     @ManyToOne

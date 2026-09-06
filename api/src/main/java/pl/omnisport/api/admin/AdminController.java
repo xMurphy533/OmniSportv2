@@ -44,19 +44,20 @@ public class AdminController {
     }
 
     //UPDATE
-    @PatchMapping("/{adminId}/login")
-    public void recordAdminLogin(@RequestParam Long adminId) throws EntityNotFoundException{
-        adminService.recordLogin(adminId);
+    @PatchMapping("/{id}/login")
+    public void recordAdminLogin(@PathVariable Long id) throws EntityNotFoundException{
+        adminService.recordLogin(id);
     }
 
     @PatchMapping("/{id}/role")
-    public void changeAdminRole(@PathVariable Long id, @RequestParam Admin.AdminRole newRole) throws EntityNotFoundException{
-        adminService.changeAdminRole(id, newRole);
+    public ResponseEntity<Void> changeAdminRole(@PathVariable Long id, @RequestBody AdminRole request) throws EntityNotFoundException{
+        adminService.changeAdminRole(id, Admin.AdminRole.valueOf(request.newRole()));
+        return ResponseEntity.ok().build();
     }
 
     //DELETE
     @DeleteMapping("/{targetId}")
-    public void deactivateAdmin(Long targetId, Long currentAdminId) throws EntityNotFoundException {
+    public void deactivateAdmin(@PathVariable Long targetId, Long currentAdminId) throws EntityNotFoundException {
         adminService.deactivateAdmin(targetId, currentAdminId);
     }
 }

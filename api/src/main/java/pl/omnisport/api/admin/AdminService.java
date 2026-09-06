@@ -49,6 +49,7 @@ public class AdminService {
                 () -> new EntityNotFoundException("Admin not found")
         );
         admin.setActive(false);
+        adminRepository.save(admin);
     }
 
     @org.springframework.transaction.annotation.Transactional
