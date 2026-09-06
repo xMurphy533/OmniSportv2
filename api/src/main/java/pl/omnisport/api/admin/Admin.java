@@ -1,21 +1,16 @@
 package pl.omnisport.api.admin;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.hibernate.annotations.CreationTimestamp;
+import pl.omnisport.api.user.AppUser;
 
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.List;
 
 @Entity
 @Getter
@@ -23,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name = "admins")
 @ToString
-public class Admin implements UserDetails {
+public class Admin{
 
     public enum AdminRole {
     SUPER_ADMIN,
@@ -34,6 +29,10 @@ public class Admin implements UserDetails {
     @Column(nullable = false)
     private Long id;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private AppUser appUser;
+
     @NotBlank(message = "Name cannot be blank")
     @Column(nullable = false)
     private String name;
@@ -42,58 +41,18 @@ public class Admin implements UserDetails {
     @Column(nullable = false)
     private String surname;
 
-    @Column(unique = true, nullable = false)
-    @NotBlank(message = "E-mail cannot be blank")
-    @Email(message = "Please put correct e-mail pattern")
-    private String email;
-
-    @NotBlank(message = "Password cannot be blank")
-    @Column(nullable = false)
-    @JsonIgnore
-    @ToString.Exclude
-    private String password;
-
     @NotNull(message = "Role cannot be null")
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private AdminRole role;
+    private AdminRole adminRole;
 
-    @Column(nullable = false)
-    private boolean isActive;
-
+    @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private LocalDate createdAt;
 
     @Column
     private LocalDate lastLoginAt;
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + this.role.name()));
-    }
-
-    @Override
-    public String getUsername() {
-        return this.email;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return this.isActive;
-    }
+    @Column
+    private boolean isActive;
 }

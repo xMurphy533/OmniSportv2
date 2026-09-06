@@ -11,16 +11,16 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import pl.omnisport.api.admin.AdminRepository;
+import pl.omnisport.api.user.AppUserRepository;
 
 @Configuration
 @RequiredArgsConstructor
 public class ApplicationConfig {
-    private final AdminRepository adminRepository;
+    private final AppUserRepository userRepository;
 
     @Bean
     public UserDetailsService userDetailsService(){
-        return username -> adminRepository.findByEmail(username).orElseThrow(
+        return username -> userRepository.findByEmail(username).orElseThrow(
                 () -> new UsernameNotFoundException("User not found")
         );
     }

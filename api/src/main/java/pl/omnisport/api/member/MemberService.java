@@ -3,13 +3,17 @@ package pl.omnisport.api.member;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import pl.omnisport.api.member.MemberMapper;
+import pl.omnisport.api.auth.MemberRegisterRequest;
 import pl.omnisport.api.coach.Coach;
 import pl.omnisport.api.coach.CoachRepository;
-import pl.omnisport.api.member.MemberRequest;
 
 import org.springframework.data.domain.Pageable;
+import pl.omnisport.api.user.AppUser;
+import pl.omnisport.api.user.AppUserRepository;
+import pl.omnisport.api.user.Role;
+
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -18,20 +22,36 @@ import java.util.Optional;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final CoachRepository coachRepository;
-    private final MemberMapper memberMapper;
+    private final AppUserRepository appUserRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public void saveNewMember(MemberRequest request){
-        Member member = memberMapper.toEntity(request);
-        Coach coach = coachRepository.findById(request.getCoachId()).orElseThrow(
-                () -> new EntityNotFoundException("Coach not found")
-        );
-        if(member.isPassValid()){
-            member.setExpiryDate(LocalDate.now().plusMonths(1));
+    public void saveNewMember(MemberRegisterRequest request){
+        if (appUserRepository.existsByEmail(request.getEmail())) {
+            throw new IllegalArgumentException("An account with the address " + request.getEmail() + " already exists in the system");
         }
-        else {
+        AppUser appUser = new AppUser();
+        appUser.setEmail(request.getEmail());
+        appUser.setPassword(passwordEncoder.encode(request.getPassword()));
+        appUser.setRole(Role.MEMBER);
+        appUser.setActive(true);
+
+        appUserRepository.save(appUser);
+
+        Member member = new Member();
+        member.setName(request.getName());
+        member.setSurname(request.getSurname());
+        member.setAge(request.getAge());
+        member.setSection(request.getSection());
+        if(request.isPassValid()){
+            member.setExpiryDate(LocalDate.now().plusMonths(1));
+        } else {
             member.setExpiryDate(null);
         }
+        Coach coach = coachRepository.findById(request.getCoachId()).orElseThrow(
+                () -> new EntityNotFoundException("Coach with this ID doesn't exist")
+        );
         member.setCoach(coach);
+
         memberRepository.save(member);
     }
 

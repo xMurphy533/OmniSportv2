@@ -5,32 +5,32 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import pl.omnisport.api.admin.Admin;
 import pl.omnisport.api.admin.AdminRepository;
 import pl.omnisport.api.security.JwtService;
-
-import java.time.LocalDate;
+import pl.omnisport.api.user.AppUser;
+import pl.omnisport.api.user.AppUserRepository;
+import pl.omnisport.api.user.Role;
 
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
     private final AdminRepository adminRepository;
+    private final AppUserRepository appUserRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    public AuthenticationResponse register(RegisterRequest request){
-        Admin admin = new Admin();
-        admin.setName(request.getName());
-        admin.setSurname(request.getSurname());
-        admin.setEmail(request.getEmail());
-        admin.setPassword(passwordEncoder.encode(request.getPassword()));
-        admin.setRole(Admin.AdminRole.SUPER_ADMIN);
-        admin.setActive(true);
-        admin.setCreatedAt(LocalDate.now());
+    public AuthenticationResponse register(AdminRegisterRequest request){
+        AppUser appUser = AppUser.builder()
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .role(Role.MEMBER)
+                .isActive(true)
+                .build();
 
-        adminRepository.save(admin);
-        var jwtToken = jwtService.generateToken(admin);
+        appUserRepository.save(appUser);
+
+        var jwtToken = jwtService.generateToken(appUser);
 
         return AuthenticationResponse.builder().token(jwtToken).build();
     }
@@ -42,7 +42,7 @@ public class AuthenticationService {
                         request.getPassword()
                 )
         );
-        var user = adminRepository.findByEmail(request.getEmail()).orElseThrow();
+        var user = appUserRepository.findByEmail(request.getEmail()).orElseThrow();
         var jwtToken = jwtService.generateToken(user);
 
         return AuthenticationResponse.builder().token(jwtToken).build();

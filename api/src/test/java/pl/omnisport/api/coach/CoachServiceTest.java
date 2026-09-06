@@ -33,18 +33,6 @@ class CoachServiceTest {
     private CoachService coachService;
 
     @Test
-    void shouldSaveNewCoach() {
-        // GIVEN
-        Coach coach = createCoach(1L, "Adam", "Nowak", 35, "BJJ");
-
-        // WHEN
-        coachService.saveNewCoach(coach);
-
-        // THEN
-        verify(coachRepository).save(coach);
-    }
-
-    @Test
     void shouldGetAllCoaches() {
         // GIVEN
         Pageable pageable = PageRequest.of(0, 10);

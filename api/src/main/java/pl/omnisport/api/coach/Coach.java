@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import pl.omnisport.api.member.Member;
+import pl.omnisport.api.user.AppUser;
 
 import java.util.List;
 
@@ -24,6 +25,10 @@ public class Coach {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private AppUser appUser;
 
     @NotBlank(message = "Name cannot be blank")
     private String name;

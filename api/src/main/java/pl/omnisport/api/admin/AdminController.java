@@ -6,23 +6,27 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import pl.omnisport.api.auth.AdminRegisterRequest;
+import pl.omnisport.api.coach.CoachService;
 
-import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/admins")
+@PreAuthorize("hasRole('ADMIN')")
 public class AdminController {
     private final AdminService adminService;
     private final AdminMapper adminMapper;
+    private final CoachService coachService;
 
     //CREATE
     @PostMapping
-    public void addNewAdmin(@Valid @RequestBody AdminRequest request){
-        Admin admin = adminMapper.toEntity(request);
-        adminService.registerNewAdmin(admin);
+    public ResponseEntity<String> addNewAdmin(@Valid @RequestBody AdminRegisterRequest request){
+        adminService.registerNewAdmin(request);
+        return ResponseEntity.ok("Admin added successfully");
     }
 
     //READ

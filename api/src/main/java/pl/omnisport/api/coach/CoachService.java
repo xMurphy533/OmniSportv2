@@ -4,19 +4,40 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+import pl.omnisport.api.auth.CoachRegisterRequest;
+import pl.omnisport.api.user.AppUser;
+import pl.omnisport.api.user.AppUserRepository;
+import pl.omnisport.api.user.Role;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class CoachService {
     private final CoachRepository coachRepository;
+    private final AppUserRepository appUserRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public void saveNewCoach(Coach coach) {
+    public void saveNewCoach(CoachRegisterRequest request) {
+        if (appUserRepository.existsByEmail(request.getEmail())) {
+            throw new IllegalArgumentException("An account with the address " + request.getEmail() + " already exists in the system");
+        }
+        AppUser appUser = new AppUser();
+        appUser.setEmail(request.getEmail());
+        appUser.setPassword(passwordEncoder.encode(request.getPassword()));
+        appUser.setRole(Role.COACH);
+        appUser.setActive(true);
+
+        appUserRepository.save(appUser);
+
+        Coach coach = new Coach();
+        coach.setName(request.getName());
+        coach.setSurname(request.getSurname());
+        coach.setSpecialization(request.getSpecialization());
+        coach.setAppUser(appUser);
+
         coachRepository.save(coach);
     }
 

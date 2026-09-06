@@ -1,9 +1,6 @@
-package pl.omnisport.api.admin;
+package pl.omnisport.api.coach;
 
 import org.mapstruct.Mapper;
-import pl.omnisport.api.coach.Coach;
-import pl.omnisport.api.coach.CoachRequest;
-import pl.omnisport.api.coach.CoachResponse;
 
 import java.util.List;
 
