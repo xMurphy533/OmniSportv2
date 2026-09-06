@@ -50,6 +50,12 @@ public class MemberService {
         Coach coach = coachRepository.findById(request.getCoachId()).orElseThrow(
                 () -> new EntityNotFoundException("Coach with this ID doesn't exist")
         );
+        if(member.isPassValid()){
+            member.setExpiryDate(LocalDate.now().plusMonths(1));
+        }
+        else {
+            member.setExpiryDate(null);
+        }
         member.setCoach(coach);
 
         memberRepository.save(member);
