@@ -16,7 +16,6 @@ import pl.omnisport.api.coach.CoachService;
 @PreAuthorize("hasRole('ADMIN')")
 @RequiredArgsConstructor
 public class StaffControler {
-    private final AdminService adminService;
     private final CoachService coachService;
 
     @PostMapping("/coaches")

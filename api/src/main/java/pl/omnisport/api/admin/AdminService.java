@@ -75,6 +75,7 @@ public class AdminService {
                 () -> new EntityNotFoundException("Admin not found")
         );
         admin.getAppUser().setActive(false);
+        admin.setActive(false);
         adminRepository.save(admin);
     }
 

@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.omnisport.api.auth.MemberRegisterRequest;
 import pl.omnisport.api.coach.Coach;
 import pl.omnisport.api.coach.CoachRepository;
@@ -25,6 +26,7 @@ public class MemberService {
     private final AppUserRepository appUserRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Transactional
     public void saveNewMember(MemberRegisterRequest request){
         if (appUserRepository.existsByEmail(request.getEmail())) {
             throw new IllegalArgumentException("An account with the address " + request.getEmail() + " already exists in the system");
@@ -42,6 +44,7 @@ public class MemberService {
         member.setSurname(request.getSurname());
         member.setAge(request.getAge());
         member.setSection(request.getSection());
+        member.setPassValid(request.isPassValid());
         if(request.isPassValid()){
             member.setExpiryDate(LocalDate.now().plusMonths(1));
         } else {
@@ -57,6 +60,7 @@ public class MemberService {
             member.setExpiryDate(null);
         }
         member.setCoach(coach);
+        member.setAppUser(appUser);
 
         memberRepository.save(member);
     }

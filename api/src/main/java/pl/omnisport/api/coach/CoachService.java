@@ -35,6 +35,7 @@ public class CoachService {
         Coach coach = new Coach();
         coach.setName(request.getName());
         coach.setSurname(request.getSurname());
+        coach.setAge(request.getAge());
         coach.setSpecialization(request.getSpecialization());
         coach.setAppUser(appUser);
 

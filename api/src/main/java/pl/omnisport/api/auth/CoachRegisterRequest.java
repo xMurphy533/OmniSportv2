@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class CoachRegisterRequest {
     private String name;
     private String surname;
+    private Integer age;
     private String email;
     private String password;
     private String specialization;
