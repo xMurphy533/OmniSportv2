@@ -31,6 +31,5 @@ public class MemberRequest {
     @NotBlank(message = "Section cannot be blank")
     private String section;
 
-    @NotNull(message = "Member must have coach")
     private Long coachId;
 }
