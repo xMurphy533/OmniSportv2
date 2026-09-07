@@ -46,13 +46,35 @@ public class CoachService {
         coachRepository.save(coach);
     }
 
-    // tu powinno byc zwracane Page<CoachResponse>, sprawdzić co wypluwa postman
-    public Page<Coach> getAllCoaches(Pageable pageable) {
-        return coachRepository.findAll(pageable);
+    public Page<CoachResponse> getAllCoaches(Pageable pageable) {
+        Page<Coach> coachPage = coachRepository.findAll(pageable);
+        return coachPage.map(
+                coach -> {
+                    boolean active = false;
+                    if(coach.getAppUser() != null)
+                        active = coach.getAppUser().isActive();
+                    return new CoachResponse(
+                            coach.getId(),
+                            coach.getName(),
+                            coach.getSurname(),
+                            coach.getSpecialization(),
+                            active
+                    );
+                }
+        );
     }
 
-    public Optional<Coach> getCoachById(Long id) {
-        return coachRepository.findById(id);
+    public CoachResponse getCoachById(Long id) {
+        Coach coach = coachRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Coach not found")
+        );
+        return new CoachResponse(
+                coach.getId(),
+                coach.getName(),
+                coach.getSurname(),
+                coach.getSpecialization(),
+                coach.getAppUser().isActive()
+        );
     }
 
     public Page<MenteeResponse> getAllMentees(Long coachId, Pageable pageable) {
@@ -65,7 +87,8 @@ public class CoachService {
                 coach.getId(),
                 coach.getName(),
                 coach.getSurname(),
-                coach.getSpecialization()
+                coach.getSpecialization(),
+                coach.getAppUser().isActive()
         );
 
         return menteesPage.map(member -> new MenteeResponse(
@@ -77,7 +100,7 @@ public class CoachService {
     }
 
     public void updateCoachSpecialization(Long id, String newSpec) {
-        Coach coach = getCoachById(id).orElseThrow(
+        Coach coach = coachRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Coach not found")
         );
         coach.setSpecialization(newSpec);
@@ -112,7 +135,7 @@ public class CoachService {
     }
 
     public void removeCoach (Long id){
-        Coach coach = getCoachById(id).orElseThrow(
+        Coach coach = coachRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Coach not found")
         );
         coachRepository.delete(coach);

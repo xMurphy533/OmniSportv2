@@ -31,15 +31,13 @@ public class CoachController {
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Page<CoachResponse>> getAllCoaches(Pageable pageable){
-        Page<Coach> coachPage = coachService.getAllCoaches(pageable);
-        Page<CoachResponse> responsePage = coachPage.map(coachMapper::toResponse);
-        return ResponseEntity.ok(responsePage);
+        return ResponseEntity.ok(coachService.getAllCoaches(pageable));
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public Optional<CoachResponse> getCoachById(@PathVariable Long id) throws EntityNotFoundException{
-        return coachService.getCoachById(id).map(coachMapper::toResponse);
+    public CoachResponse getCoachById(@PathVariable Long id) throws EntityNotFoundException{
+        return coachService.getCoachById(id);
     }
     @GetMapping("/{coachId}/mentees")
     @PreAuthorize("hasAnyRole('ADMIN', 'COACH')")

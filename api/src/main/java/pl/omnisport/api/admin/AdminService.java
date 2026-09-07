@@ -47,15 +47,36 @@ public class AdminService {
         adminRepository.save(admin);
     }
 
-    public Page<Admin> getAllAdmins(Pageable pageable){
-        return adminRepository.findAll(pageable);
+    public Page<AdminResponse> getAllAdmins(Pageable pageable){
+        Page<Admin> adminPage = adminRepository.findAll(pageable);
+        return adminPage.map(
+                admin -> {
+                    boolean active = false;
+                    if(admin.getAppUser() != null){
+                        active = admin.getAppUser().isActive();
+                    }
+                    return new AdminResponse(
+                            admin.getId(),
+                            admin.getName(),
+                            admin.getSurname(),
+                            admin.getAdminRole(),
+                            active
+                    );
+                }
+        );
     }
 
-    public Optional<Admin> findAdminById(Long id){
+    public AdminResponse findAdminById(Long id){
         Admin admin = adminRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Admin not found")
         );
-        return Optional.of(admin);
+        return new AdminResponse(
+                admin.getId(),
+                admin.getName(),
+                admin.getSurname(),
+                admin.getAdminRole(),
+                admin.getAppUser().isActive()
+        );
     }
 
     public Optional<Admin> findAdminByEmail(String email){

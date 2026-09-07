@@ -16,7 +16,7 @@ public class AdminResponse {
 
     private String surname;
 
-    private Admin.AdminRole role;
+    private Admin.AdminRole adminRole;
 
     private boolean isActive;
 }
