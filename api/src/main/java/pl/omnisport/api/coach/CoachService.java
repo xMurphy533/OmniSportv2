@@ -95,6 +95,22 @@ public class CoachService {
         coach.addMemberToList(mentee);
     }
 
+    @Transactional
+    public void removeMenteeFromCoach(Long coachId, Long memberId){
+        Member mentee = memberRepository.findById(memberId).orElseThrow(
+                () -> new EntityNotFoundException("Member not found")
+        );
+        Coach coach = coachRepository.findById(coachId).orElseThrow(
+                () -> new EntityNotFoundException("Coach not found")
+        );
+        if(mentee.getCoach() != null && mentee.getCoach().getId().equals(coachId))
+        {
+            coach.removeMemberFromList(mentee);
+        } else{
+            throw new IllegalArgumentException("This member doesn't belong to any coach");
+        }
+    }
+
     public void removeCoach (Long id){
         Coach coach = getCoachById(id).orElseThrow(
                 () -> new EntityNotFoundException("Coach not found")

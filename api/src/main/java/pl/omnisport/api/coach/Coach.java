@@ -56,4 +56,10 @@ public class Coach {
         this.mentees.add(member);
         member.setCoach(this);
     }
+
+    public void removeMemberFromList(Member member){
+        if(this.mentees != null)
+            this.mentees.remove(member);
+        member.setCoach(null);
+    }
 }
