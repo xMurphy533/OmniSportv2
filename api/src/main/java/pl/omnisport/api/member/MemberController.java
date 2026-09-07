@@ -68,4 +68,11 @@ public class MemberController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Member not found");
         }
     }
+
+    @PatchMapping("/{memberId}/coach/{newCoachId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> changeMembersCoach(@PathVariable Long newCoachId, @PathVariable Long memberId){
+        memberService.changeMembersCoach(newCoachId, memberId);
+        return ResponseEntity.ok().build();
+    }
 }

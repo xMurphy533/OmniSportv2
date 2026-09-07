@@ -64,6 +64,13 @@ public class CoachController {
     }
 
     //DELETE
+    @DeleteMapping("/{coachId}/{memberId}/mentees")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> removeMentee(@PathVariable Long coachId, @PathVariable Long memberId){
+        coachService.removeMenteeFromCoach(coachId, memberId);
+        return ResponseEntity.ok().build();
+    }
+
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public void deleteCoach(@PathVariable Long id){

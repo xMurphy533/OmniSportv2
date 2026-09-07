@@ -97,4 +97,18 @@ public class MemberService {
         member.setExpiryDate(newDatePassValidity);
         memberRepository.save(member);
     }
+
+    @Transactional
+    public void changeMembersCoach(Long newCoachId, Long memberId){
+        Coach newCoach = coachRepository.findById(newCoachId).orElseThrow(
+                () -> new EntityNotFoundException("Coach not found")
+        );
+        Member mentee = memberRepository.findById(memberId).orElseThrow(
+                () -> new EntityNotFoundException("Member not found")
+        );
+        Coach oldCoach = mentee.getCoach();
+        if(oldCoach != null)
+            oldCoach.removeMemberFromList(mentee);
+        newCoach.addMemberToList(mentee);
+    }
 }
