@@ -20,6 +20,7 @@ import java.util.Optional;
 public class AdminController {
     private final AdminService adminService;
     private final AdminMapper adminMapper;
+    private final CoachService coachService;
 
     //CREATE
     @PostMapping
