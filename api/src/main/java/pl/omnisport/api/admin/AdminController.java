@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.omnisport.api.auth.AdminRegisterRequest;
-import pl.omnisport.api.coach.CoachService;
 
 import java.util.Optional;
 
@@ -20,7 +19,6 @@ import java.util.Optional;
 public class AdminController {
     private final AdminService adminService;
     private final AdminMapper adminMapper;
-    private final CoachService coachService;
 
     //CREATE
     @PostMapping
@@ -32,14 +30,12 @@ public class AdminController {
     //READ
     @GetMapping
     public ResponseEntity<Page<AdminResponse>> getAllAdmins(Pageable pageable){
-        Page<Admin> adminPage = adminService.getAllAdmins(pageable);
-        Page<AdminResponse> responsePage = adminPage.map(adminMapper::toResponse);
-        return ResponseEntity.ok(responsePage);
+        return ResponseEntity.ok(adminService.getAllAdmins(pageable));
     }
 
     @GetMapping("/{id}")
-    public Optional<AdminResponse> getAdminById(@PathVariable Long id) throws EntityNotFoundException{
-        return adminService.findAdminById(id).map(adminMapper::toResponse);
+    public AdminResponse getAdminById(@PathVariable Long id) throws EntityNotFoundException{
+        return adminService.findAdminById(id);
     }
 
     @GetMapping("/search")

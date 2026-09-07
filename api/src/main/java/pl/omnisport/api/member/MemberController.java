@@ -25,15 +25,13 @@ public class MemberController {
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Page<MemberResponse>> getAllMembers(Pageable pageable){
-        Page<Member> memberPage = memberService.getAllMembers(pageable);
-        Page<MemberResponse> responsePage = memberPage.map(memberMapper::toResponse);
-        return ResponseEntity.ok(responsePage);
+        return ResponseEntity.ok(memberService.getAllMembers(pageable));
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public Optional<MemberResponse> getMemberById(@PathVariable Long id) throws EntityNotFoundException{
-        return memberService.getMemberById(id).map(memberMapper::toResponse);
+    public MemberResponse getMemberById(@PathVariable Long id) throws EntityNotFoundException{
+        return memberService.getMemberById(id);
     }
 
     @PostMapping

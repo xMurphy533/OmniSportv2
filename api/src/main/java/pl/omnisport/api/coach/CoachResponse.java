@@ -11,10 +11,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CoachResponse {
     private Long id;
-
     private String name;
-
     private String surname;
-
     private String specialization;
+    private boolean isActive;
 }

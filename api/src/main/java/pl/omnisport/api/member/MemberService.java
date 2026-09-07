@@ -11,6 +11,7 @@ import pl.omnisport.api.coach.Coach;
 import pl.omnisport.api.coach.CoachRepository;
 
 import org.springframework.data.domain.Pageable;
+import pl.omnisport.api.coach.CoachResponse;
 import pl.omnisport.api.user.AppUser;
 import pl.omnisport.api.user.AppUserRepository;
 import pl.omnisport.api.user.Role;
@@ -69,12 +70,65 @@ public class MemberService {
         memberRepository.save(member);
     }
 
-    public Page<Member> getAllMembers(Pageable pageable){
-        return memberRepository.findAll(pageable);
+    public Page<MemberResponse> getAllMembers(Pageable pageable){
+        Page<Member> memberPage = memberRepository.findAll(pageable);
+        return memberPage.map(
+                member -> {
+                    boolean memberActive = false;
+                    if(member.getAppUser() != null)
+                        memberActive = member.getAppUser().isActive();
+                    CoachResponse coachResponse = null;
+                    if(member.getCoach() != null){
+                        Coach coach = member.getCoach();
+                        boolean coachActive = false;
+                        if(coach.getAppUser() != null)
+                            coachActive = coach.getAppUser().isActive();
+                        coachResponse = new CoachResponse(
+                                coach.getId(),
+                                coach.getName(),
+                                coach.getSurname(),
+                                coach.getSpecialization(),
+                                coachActive
+                        );
+                    }
+                    return new MemberResponse(
+                            member.getId(),
+                            member.getName(),
+                            member.getSurname(),
+                            member.getSection(),
+                            coachResponse,
+                            memberActive
+                    );
+                }
+        );
     }
 
-    public Optional<Member> getMemberById(Long memberId){
-        return memberRepository.findById(memberId);
+    public MemberResponse getMemberById(Long memberId){
+        Member member = memberRepository.findById(memberId).orElseThrow(
+                () -> new EntityNotFoundException("Member not found")
+        );
+        boolean memberActive = false;
+        Coach coach = null;
+        if(member.getAppUser() != null){
+            memberActive = member.getAppUser().isActive();
+            coach = member.getCoach();
+        }
+        CoachResponse coachResponse = new CoachResponse(
+                coach.getId(),
+                coach.getName(),
+                coach.getSurname(),
+                coach.getSpecialization(),
+                coach.getAppUser().isActive()
+        );
+
+        return new MemberResponse(
+                member.getId(),
+                member.getName(),
+                member.getSurname(),
+                member.getSection(),
+                coachResponse,
+                memberActive
+        );
     }
 
     public Member updateMember(Long memberId, Member member){
