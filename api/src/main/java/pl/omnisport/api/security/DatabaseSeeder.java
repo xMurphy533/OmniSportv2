@@ -7,9 +7,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import pl.omnisport.api.admin.Admin;
 import pl.omnisport.api.admin.AdminRepository;
+import pl.omnisport.api.coach.Coach;
+import pl.omnisport.api.coach.CoachRepository;
+import pl.omnisport.api.member.Member;
+import pl.omnisport.api.member.MemberRepository;
 import pl.omnisport.api.user.AppUser;
 import pl.omnisport.api.user.AppUserRepository;
 import pl.omnisport.api.user.Role;
+
+import java.time.LocalDate;
 
 @Component
 @RequiredArgsConstructor
@@ -18,6 +24,8 @@ public class DatabaseSeeder implements CommandLineRunner {
     private final AppUserRepository appUserRepository;
     private final AdminRepository adminRepository;
     private final PasswordEncoder passwordEncoder;
+    private final CoachRepository coachRepository;
+    private final MemberRepository memberRepository;
 
     @Override
     public void run(String... args) throws Exception{
@@ -33,9 +41,39 @@ public class DatabaseSeeder implements CommandLineRunner {
             adminProfile.setSurname("Admin");
             adminProfile.setAdminRole(Admin.AdminRole.SUPER_ADMIN);
             adminProfile.setAppUser(adminAccount);
-            adminProfile.setActive(true);
 
             adminRepository.save(adminProfile);
         }
+
+        AppUser coachAccount = new AppUser();
+        coachAccount.setEmail("kaiser@omnisport.pl");
+        coachAccount.setPassword(passwordEncoder.encode("barcza12"));
+        coachAccount.setRole(Role.COACH);
+        coachAccount.setActive(true);
+
+        AppUser memberAccount = new AppUser();
+        memberAccount.setEmail("kaczmarczyk21@omnisport.pl");
+        memberAccount.setPassword(passwordEncoder.encode("niko05"));
+        memberAccount.setRole(Role.MEMBER);
+        memberAccount.setActive(true);
+
+        Coach coachProfile = new Coach();
+        coachProfile.setName("Przemysław");
+        coachProfile.setSurname("Zbiciak");
+        coachProfile.setSpecialization("MMA, BJJ, Kickboxing");
+        coachProfile.setAppUser(coachAccount);
+
+        Member memberProfile = new Member();
+        memberProfile.setName("Nikodem");
+        memberProfile.setSurname("Kaczmarczyk");
+        memberProfile.setAge(21);
+        memberProfile.setSection("Kickboxing");
+        memberProfile.setPassValid(true);
+        memberProfile.setExpiryDate(LocalDate.now().plusMonths(1));
+        memberProfile.setCoach(coachProfile);
+        memberProfile.setAppUser(memberAccount);
+
+        coachRepository.save(coachProfile);
+        memberRepository.save(memberProfile);
     }
 }

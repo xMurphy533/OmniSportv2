@@ -52,7 +52,4 @@ public class Admin{
 
     @Column
     private LocalDate lastLoginAt;
-
-    @Column
-    private boolean isActive;
 }
