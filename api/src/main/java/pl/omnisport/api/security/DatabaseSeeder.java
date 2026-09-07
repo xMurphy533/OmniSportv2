@@ -29,7 +29,7 @@ public class DatabaseSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception{
-        if(appUserRepository.findByEmail("szef@omnisport.pl").isEmpty()){
+        if(appUserRepository.findByEmail("szef@omnisport.pl").isEmpty()) {
             AppUser adminAccount = new AppUser();
             adminAccount.setEmail("szef@omnisport.pl");
             adminAccount.setPassword(passwordEncoder.encode("password123"));
@@ -43,37 +43,38 @@ public class DatabaseSeeder implements CommandLineRunner {
             adminProfile.setAppUser(adminAccount);
 
             adminRepository.save(adminProfile);
+
+            AppUser coachAccount = new AppUser();
+            coachAccount.setEmail("kaiser@omnisport.pl");
+            coachAccount.setPassword(passwordEncoder.encode("barcza12"));
+            coachAccount.setRole(Role.COACH);
+            coachAccount.setActive(true);
+
+            AppUser memberAccount = new AppUser();
+            memberAccount.setEmail("kaczmarczyk21@omnisport.pl");
+            memberAccount.setPassword(passwordEncoder.encode("niko05"));
+            memberAccount.setRole(Role.MEMBER);
+            memberAccount.setActive(true);
+
+            Coach coachProfile = new Coach();
+            coachProfile.setName("Przemysław");
+            coachProfile.setSurname("Zbiciak");
+            coachProfile.setSpecialization("MMA, BJJ, Kickboxing");
+            coachProfile.setAppUser(coachAccount);
+
+            Member memberProfile = new Member();
+            memberProfile.setName("Nikodem");
+            memberProfile.setSurname("Kaczmarczyk");
+            memberProfile.setAge(21);
+            memberProfile.setSection("Kickboxing");
+            memberProfile.setPassValid(true);
+            memberProfile.setExpiryDate(LocalDate.now().plusMonths(1));
+            memberProfile.setCoach(coachProfile);
+            memberProfile.setAppUser(memberAccount);
+
+            coachProfile.addMemberToList(memberProfile);
+            coachRepository.save(coachProfile);
+            memberRepository.save(memberProfile);
         }
-
-        AppUser coachAccount = new AppUser();
-        coachAccount.setEmail("kaiser@omnisport.pl");
-        coachAccount.setPassword(passwordEncoder.encode("barcza12"));
-        coachAccount.setRole(Role.COACH);
-        coachAccount.setActive(true);
-
-        AppUser memberAccount = new AppUser();
-        memberAccount.setEmail("kaczmarczyk21@omnisport.pl");
-        memberAccount.setPassword(passwordEncoder.encode("niko05"));
-        memberAccount.setRole(Role.MEMBER);
-        memberAccount.setActive(true);
-
-        Coach coachProfile = new Coach();
-        coachProfile.setName("Przemysław");
-        coachProfile.setSurname("Zbiciak");
-        coachProfile.setSpecialization("MMA, BJJ, Kickboxing");
-        coachProfile.setAppUser(coachAccount);
-
-        Member memberProfile = new Member();
-        memberProfile.setName("Nikodem");
-        memberProfile.setSurname("Kaczmarczyk");
-        memberProfile.setAge(21);
-        memberProfile.setSection("Kickboxing");
-        memberProfile.setPassValid(true);
-        memberProfile.setExpiryDate(LocalDate.now().plusMonths(1));
-        memberProfile.setCoach(coachProfile);
-        memberProfile.setAppUser(memberAccount);
-
-        coachRepository.save(coachProfile);
-        memberRepository.save(memberProfile);
     }
 }

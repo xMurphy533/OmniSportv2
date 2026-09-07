@@ -12,6 +12,7 @@ import lombok.ToString;
 import pl.omnisport.api.member.Member;
 import pl.omnisport.api.user.AppUser;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -48,4 +49,11 @@ public class Coach {
     @JsonIgnore //to po to żeby uniknąć błędu typu 500
     @ToString.Exclude //to po to żeby uniknąć nieskończonej pętli w konsoli
     private List<Member> mentees;
+
+    public void addMemberToList(Member member){
+        if(this.mentees == null)
+            this.mentees = new ArrayList<>();
+        this.mentees.add(member);
+        member.setCoach(this);
+    }
 }

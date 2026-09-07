@@ -50,16 +50,20 @@ public class MemberService {
         } else {
             member.setExpiryDate(null);
         }
-        Coach coach = coachRepository.findById(request.getCoachId()).orElseThrow(
-                () -> new EntityNotFoundException("Coach with this ID doesn't exist")
-        );
+        if(request.getCoachId() != null){
+            Coach coach = coachRepository.findById(request.getCoachId()).orElseThrow(
+                    () -> new EntityNotFoundException("Coach with this ID doesn't exist")
+            );
+            member.setCoach(coach);
+            coach.addMemberToList(member);
+        }
+
         if(member.isPassValid()){
             member.setExpiryDate(LocalDate.now().plusMonths(1));
         }
         else {
             member.setExpiryDate(null);
         }
-        member.setCoach(coach);
         member.setAppUser(appUser);
 
         memberRepository.save(member);

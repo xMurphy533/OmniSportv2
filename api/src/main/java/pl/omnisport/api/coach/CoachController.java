@@ -41,12 +41,25 @@ public class CoachController {
     public Optional<CoachResponse> getCoachById(@PathVariable Long id) throws EntityNotFoundException{
         return coachService.getCoachById(id).map(coachMapper::toResponse);
     }
+    @GetMapping("/{coachId}/mentees")
+    @PreAuthorize("hasAnyRole('ADMIN', 'COACH')")
+    public ResponseEntity<Page<MenteeResponse>> getCoachMentees(@PathVariable Long coachId, Pageable pageable) throws EntityNotFoundException{
+        Page<MenteeResponse> menteesPage = coachService.getAllMentees(coachId, pageable);
+        return ResponseEntity.ok(menteesPage);
+    }
 
     //UPDATE
     @PatchMapping("/{id}/specialization")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> updateSpecialization(@PathVariable Long id, @RequestBody UpdateSpecializationRequest request){
         coachService.updateCoachSpecialization(id, request.newSpecialization());
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/{coachId}/{memberId}/mentees")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> addMentee(@PathVariable Long coachId, @PathVariable Long memberId){
+        coachService.addMenteeToCoach(coachId, memberId);
         return ResponseEntity.ok().build();
     }
 

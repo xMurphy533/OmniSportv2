@@ -1,16 +1,15 @@
-package pl.omnisport.api.member;
+package pl.omnisport.api.coach;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import pl.omnisport.api.coach.CoachResponse;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MemberResponse {
+public class MenteeResponse {
     private Long id;
 
     private String name;
@@ -19,5 +18,4 @@ public class MemberResponse {
 
     private String section;
 
-    private CoachResponse coach;
 }
