@@ -42,7 +42,6 @@ public class AdminService {
         admin.setAdminRole(request.getAdminRole());
         admin.setCreatedAt(LocalDate.now());
         admin.setLastLoginAt(null);
-        admin.setActive(true);
         admin.setAppUser(appUser);
 
         adminRepository.save(admin);
@@ -75,7 +74,6 @@ public class AdminService {
                 () -> new EntityNotFoundException("Admin not found")
         );
         admin.getAppUser().setActive(false);
-        admin.setActive(false);
         adminRepository.save(admin);
     }
 

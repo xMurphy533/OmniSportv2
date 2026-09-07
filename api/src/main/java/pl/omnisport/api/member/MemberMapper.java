@@ -8,7 +8,6 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface MemberMapper {
     MemberResponse toResponse(Member member);
-    List<MemberResponse> toResponseList(List<Member> members);
     @Mapping(target = "coach", ignore = true)
     Member toEntity(MemberRequest request);
 }

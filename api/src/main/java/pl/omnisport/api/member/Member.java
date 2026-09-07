@@ -20,6 +20,7 @@ import java.time.LocalDate;
 public class Member {
 
     @Id
+    @NotNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
