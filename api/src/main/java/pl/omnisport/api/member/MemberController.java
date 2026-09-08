@@ -12,17 +12,22 @@ import org.springframework.web.server.ResponseStatusException;
 
 import org.springframework.data.domain.Pageable;
 import pl.omnisport.api.auth.MemberRegisterRequest;
-import pl.omnisport.api.coach.UpdateSpecializationRequest;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/members")
 @RequiredArgsConstructor
 public class MemberController {
     private final MemberService memberService;
-    private final MemberMapper memberMapper;
 
+    //CREATE
+    @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'COACH')")
+    public ResponseEntity<Void> addNewMember(@Valid @RequestBody MemberRegisterRequest request){
+        memberService.saveNewMember(request);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    //READ
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Page<MemberResponse>> getAllMembers(Pageable pageable){
@@ -31,26 +36,15 @@ public class MemberController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public MemberResponse getMemberById(@PathVariable Long id) throws EntityNotFoundException{
-        return memberService.getMemberById(id);
+    public ResponseEntity<MemberResponse> getMemberById(@PathVariable Long id) throws EntityNotFoundException{
+        return ResponseEntity.ok(memberService.getMemberById(id));
     }
 
-    @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'COACH')")
-    public void addNewMember(@Valid @RequestBody MemberRegisterRequest request){
-        memberService.saveNewMember(request);
-    }
-
+    //UPDATE
     @PutMapping("/{id}/section")
     public ResponseEntity<Void> updateMembersSection(@PathVariable Long id, @Valid @RequestBody UpdateSectionRequest request){
         memberService.updateMembersSection(id, request.newSection());
         return ResponseEntity.ok().build();
-    }
-
-    @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public void deleteMember(@PathVariable Long id){
-        memberService.removeMember(id);
     }
 
     @PatchMapping("/{id}/extend-pass")
@@ -68,6 +62,14 @@ public class MemberController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> changeMembersCoach(@PathVariable Long newCoachId, @PathVariable Long memberId){
         memberService.changeMembersCoach(newCoachId, memberId);
+        return ResponseEntity.ok().build();
+    }
+
+    //DELETE
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> deactivateMember(@PathVariable Long id){
+        memberService.deactivateMember(id);
         return ResponseEntity.ok().build();
     }
 }

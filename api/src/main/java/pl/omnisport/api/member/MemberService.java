@@ -17,7 +17,6 @@ import pl.omnisport.api.user.AppUserRepository;
 import pl.omnisport.api.user.Role;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -139,8 +138,16 @@ public class MemberService {
         member.setSection(newSection);
     }
 
-    public void removeMember(Long memberId){
-        memberRepository.deleteById(memberId);
+    @Transactional
+    public void deactivateMember(Long memberId){
+        Member member = memberRepository.findById(memberId).orElseThrow(
+                () -> new EntityNotFoundException("Member not found")
+        );
+        AppUser membersUser = member.getAppUser();
+        if(membersUser != null) {
+            membersUser.setActive(false);
+            member.setCoach(null);
+        }
     }
 
     public void extendPassValidity(Long memberId){

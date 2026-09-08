@@ -30,5 +30,4 @@ public class CoachRequest {
 
     @NotBlank(message = "Specialization cannot be blank")
     private String specialization;
-
 }

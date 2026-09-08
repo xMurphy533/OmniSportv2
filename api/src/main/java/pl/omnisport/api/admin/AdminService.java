@@ -104,7 +104,6 @@ public class AdminService {
                 () -> new EntityNotFoundException("Admin not found")
         );
         admin.setLastLoginAt(LocalDate.now());
-
     }
 
     @org.springframework.transaction.annotation.Transactional
