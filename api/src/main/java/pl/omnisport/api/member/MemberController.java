@@ -12,6 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import org.springframework.data.domain.Pageable;
 import pl.omnisport.api.auth.MemberRegisterRequest;
+import pl.omnisport.api.coach.UpdateSpecializationRequest;
 
 import java.util.Optional;
 
@@ -40,14 +41,10 @@ public class MemberController {
         memberService.saveNewMember(request);
     }
 
-    @PutMapping("/{id}")
-    public Member updateMember(@PathVariable Long id, @Valid @RequestBody MemberRequest request){
-        Member member = memberMapper.toEntity(request);
-        try{
-            return memberService.updateMember(id, member);
-        } catch (EntityNotFoundException e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Member not found");
-        }
+    @PutMapping("/{id}/section")
+    public ResponseEntity<Void> updateMembersSection(@PathVariable Long id, @Valid @RequestBody UpdateSectionRequest request){
+        memberService.updateMembersSection(id, request.newSection());
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")

@@ -131,12 +131,12 @@ public class MemberService {
         );
     }
 
-    public Member updateMember(Long memberId, Member member){
-        if(!memberRepository.existsById(memberId)){
-            throw new EntityNotFoundException("Member not found");
-        }
-        member.setId(memberId);
-        return memberRepository.save(member);
+    @Transactional
+    public void updateMembersSection(Long memberId, String newSection){
+        Member member = memberRepository.findById(memberId).orElseThrow(
+                () -> new EntityNotFoundException("Member not found")
+        );
+        member.setSection(newSection);
     }
 
     public void removeMember(Long memberId){
