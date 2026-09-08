@@ -5,12 +5,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.omnisport.api.auth.AdminRegisterRequest;
-
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -22,9 +21,9 @@ public class AdminController {
 
     //CREATE
     @PostMapping
-    public ResponseEntity<String> addNewAdmin(@Valid @RequestBody AdminRegisterRequest request){
+    public ResponseEntity<Void> addNewAdmin(@Valid @RequestBody AdminRegisterRequest request){
         adminService.registerNewAdmin(request);
-        return ResponseEntity.ok("Admin added successfully");
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     //READ
@@ -34,19 +33,20 @@ public class AdminController {
     }
 
     @GetMapping("/{id}")
-    public AdminResponse getAdminById(@PathVariable Long id) throws EntityNotFoundException{
-        return adminService.findAdminById(id);
+    public ResponseEntity<AdminResponse> getAdminById(@PathVariable Long id) throws EntityNotFoundException{
+        return ResponseEntity.ok(adminService.findAdminById(id));
     }
 
     @GetMapping("/search")
-    public Optional<AdminResponse> getAdminByEmail(@RequestParam String email) throws EntityNotFoundException{
-        return adminService.findAdminByEmail(email).map(adminMapper::toResponse);
+    public ResponseEntity<AdminResponse> getAdminByEmail(@RequestParam String email) throws EntityNotFoundException{
+        return ResponseEntity.ok(adminService.findAdminByEmail(email).map(adminMapper::toResponse).orElseThrow());
     }
 
     //UPDATE
     @PatchMapping("/{id}/login")
-    public void recordAdminLogin(@PathVariable Long id) throws EntityNotFoundException{
+    public ResponseEntity<Void> recordAdminLogin(@PathVariable Long id) throws EntityNotFoundException{
         adminService.recordLogin(id);
+        return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/{id}/role")
@@ -57,7 +57,8 @@ public class AdminController {
 
     //DELETE
     @DeleteMapping("/{targetId}")
-    public void deactivateAdmin(@PathVariable Long targetId, Long currentAdminId) throws EntityNotFoundException {
+    public ResponseEntity<Void> deactivateAdmin(@PathVariable Long targetId, Long currentAdminId) throws EntityNotFoundException {
         adminService.deactivateAdmin(targetId, currentAdminId);
+        return ResponseEntity.ok().build();
     }
 }

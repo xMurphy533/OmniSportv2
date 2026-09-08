@@ -14,8 +14,6 @@ import pl.omnisport.api.user.AppUser;
 import pl.omnisport.api.user.AppUserRepository;
 import pl.omnisport.api.user.Role;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class CoachService {
@@ -134,10 +132,15 @@ public class CoachService {
         }
     }
 
-    public void removeCoach (Long id){
+    @Transactional
+    public void deactivateCoach (Long id){
         Coach coach = coachRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Coach not found")
         );
-        coachRepository.delete(coach);
+        AppUser coachsUser = coach.getAppUser();
+        if(coachsUser != null){
+            coachsUser.setActive(false);
+            coach.setMentees(null);
+        }
     }
 }

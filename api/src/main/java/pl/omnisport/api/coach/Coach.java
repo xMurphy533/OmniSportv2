@@ -46,8 +46,8 @@ public class Coach {
     private String specialization;
 
     @OneToMany(mappedBy = "coach")
-    @JsonIgnore //to po to żeby uniknąć błędu typu 500
-    @ToString.Exclude //to po to żeby uniknąć nieskończonej pętli w konsoli
+    @JsonIgnore
+    @ToString.Exclude
     private List<Member> mentees;
 
     public void addMemberToList(Member member){

@@ -10,14 +10,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.omnisport.api.auth.CoachRegisterRequest;
 
-import java.util.Optional;
-
 @RestController
 @RequestMapping("/api/coaches")
 @RequiredArgsConstructor
 public class CoachController {
     private final CoachService coachService;
-    private final CoachMapper coachMapper;
 
     //CREATE
     @PostMapping
@@ -36,8 +33,8 @@ public class CoachController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public CoachResponse getCoachById(@PathVariable Long id) throws EntityNotFoundException{
-        return coachService.getCoachById(id);
+    public ResponseEntity<CoachResponse> getCoachById(@PathVariable Long id) throws EntityNotFoundException{
+        return ResponseEntity.ok(coachService.getCoachById(id));
     }
     @GetMapping("/{coachId}/mentees")
     @PreAuthorize("hasAnyRole('ADMIN', 'COACH')")
@@ -71,8 +68,9 @@ public class CoachController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public void deleteCoach(@PathVariable Long id){
-        coachService.removeCoach(id);
+    public ResponseEntity<Void> deleteCoach(@PathVariable Long id){
+        coachService.deactivateCoach(id);
+        return ResponseEntity.ok().build();
     }
 
 }
