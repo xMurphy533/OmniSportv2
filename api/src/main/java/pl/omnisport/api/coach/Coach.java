@@ -1,6 +1,5 @@
 package pl.omnisport.api.coach;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -9,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import pl.omnisport.api.contracts.CoachingContract;
 import pl.omnisport.api.member.Member;
 import pl.omnisport.api.user.AppUser;
 
@@ -45,21 +45,13 @@ public class Coach {
     @NotBlank(message = "Specialization cannot be blank")
     private String specialization;
 
-    @OneToMany(mappedBy = "coach")
-    @JsonIgnore
-    @ToString.Exclude
-    private List<Member> mentees;
+    @OneToMany(mappedBy = "coach", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CoachingContract> contracts = new ArrayList<>();
 
-    public void addMemberToList(Member member){
-        if(this.mentees == null)
-            this.mentees = new ArrayList<>();
-        this.mentees.add(member);
-        member.setCoach(this);
-    }
-
-    public void removeMemberFromList(Member member){
-        if(this.mentees != null)
-            this.mentees.remove(member);
-        member.setCoach(null);
+    public List<Member> getCurrentMembers() {
+        return this.contracts.stream()
+                .filter(CoachingContract::isActive)
+                .map(CoachingContract::getMember)
+                .toList();
     }
 }

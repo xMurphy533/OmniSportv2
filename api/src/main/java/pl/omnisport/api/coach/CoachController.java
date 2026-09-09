@@ -21,7 +21,7 @@ public class CoachController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> addNewCoach(@Valid @RequestBody CoachRegisterRequest request){
         coachService.saveNewCoach(request);
-        return ResponseEntity.ok("Coach added successfully");
+        return ResponseEntity.ok().build();
     }
 
     //READ
@@ -37,7 +37,7 @@ public class CoachController {
         return ResponseEntity.ok(coachService.getCoachById(id));
     }
     @GetMapping("/{coachId}/mentees")
-    @PreAuthorize("hasAnyRole('ADMIN', 'COACH')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Page<MenteeResponse>> getCoachMentees(@PathVariable Long coachId, Pageable pageable) throws EntityNotFoundException{
         Page<MenteeResponse> menteesPage = coachService.getAllMentees(coachId, pageable);
         return ResponseEntity.ok(menteesPage);

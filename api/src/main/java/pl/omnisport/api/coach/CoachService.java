@@ -8,11 +8,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.omnisport.api.auth.CoachRegisterRequest;
+import pl.omnisport.api.contracts.CoachingContract;
+import pl.omnisport.api.contracts.CoachingContractRepository;
+import pl.omnisport.api.contracts.CoachingContractService;
 import pl.omnisport.api.member.Member;
 import pl.omnisport.api.member.MemberRepository;
 import pl.omnisport.api.user.AppUser;
 import pl.omnisport.api.user.AppUserRepository;
 import pl.omnisport.api.user.Role;
+
+import java.time.LocalDate;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +26,8 @@ public class CoachService {
     private final AppUserRepository appUserRepository;
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
+    private final CoachingContractRepository coachingContractRepository;
+    private final CoachingContractService coachingContractService;
 
     public void saveNewCoach(CoachRegisterRequest request) {
         if (appUserRepository.existsByEmail(request.getEmail())) {
@@ -76,20 +83,10 @@ public class CoachService {
     }
 
     public Page<MenteeResponse> getAllMentees(Long coachId, Pageable pageable) {
-        Coach coach = coachRepository.findById(coachId).orElseThrow(
-                () -> new EntityNotFoundException("Coach not found")
-        );
-        Page<Member> menteesPage = memberRepository.findAllByCoachId(coachId, pageable);
-
-        CoachResponse coachResponse = new CoachResponse(
-                coach.getId(),
-                coach.getName(),
-                coach.getSurname(),
-                coach.getSpecialization(),
-                coach.getAppUser().isActive()
-        );
-
-        return menteesPage.map(member -> new MenteeResponse(
+        if(!coachRepository.existsById(coachId))
+            throw new EntityNotFoundException("Coach not found");
+        Page<Member> memberPage = coachingContractRepository.findActiveMembersByCoachId(coachId, pageable);
+        return memberPage.map(member -> new MenteeResponse(
                 member.getId(),
                 member.getName(),
                 member.getSurname(),
@@ -97,12 +94,12 @@ public class CoachService {
         ));
     }
 
+    @Transactional
     public void updateCoachSpecialization(Long id, String newSpec) {
         Coach coach = coachRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Coach not found")
         );
         coach.setSpecialization(newSpec);
-        coachRepository.save(coach);
     }
 
     @Transactional
@@ -113,7 +110,22 @@ public class CoachService {
         Coach coach = coachRepository.findById(coachId).orElseThrow(
                 () -> new EntityNotFoundException("Coach not found")
         );
-        coach.addMemberToList(mentee);
+        mentee.getContracts().stream()
+                .filter(CoachingContract::isActive)
+                .findFirst()
+                .ifPresent(activeContract -> {
+                    if(activeContract.getCoach().getId().equals(coachId))
+                        throw new IllegalStateException("Member is already signed to this coach");
+                    activeContract.setActive(false);
+                    activeContract.setEndDate(LocalDate.now());
+                });
+
+        CoachingContract newContract = coachingContractService.createContract(coachId, memberId);
+
+        coach.getContracts().add(newContract);
+        mentee.getContracts().add(newContract);
+
+        coachingContractRepository.save(newContract);
     }
 
     @Transactional
@@ -121,15 +133,14 @@ public class CoachService {
         Member mentee = memberRepository.findById(memberId).orElseThrow(
                 () -> new EntityNotFoundException("Member not found")
         );
-        Coach coach = coachRepository.findById(coachId).orElseThrow(
-                () -> new EntityNotFoundException("Coach not found")
-        );
-        if(mentee.getCoach() != null && mentee.getCoach().getId().equals(coachId))
-        {
-            coach.removeMemberFromList(mentee);
-        } else{
-            throw new IllegalArgumentException("This member doesn't belong to any coach");
-        }
+
+        CoachingContract activeContract = mentee.getContracts().stream()
+                .filter(contract -> contract.isActive() && contract.getCoach().getId().equals(coachId))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("This member doesn't belong to any coach"));
+
+        activeContract.setActive(false);
+        activeContract.setEndDate(LocalDate.now());
     }
 
     @Transactional
@@ -140,7 +151,6 @@ public class CoachService {
         AppUser coachsUser = coach.getAppUser();
         if(coachsUser != null){
             coachsUser.setActive(false);
-            coach.setMentees(null);
         }
     }
 }

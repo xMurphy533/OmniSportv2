@@ -7,9 +7,12 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import pl.omnisport.api.coach.Coach;
+import pl.omnisport.api.contracts.CoachingContract;
 import pl.omnisport.api.user.AppUser;
 
+import java.util.List;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 @Entity
 @Getter
@@ -47,7 +50,14 @@ public class Member {
     @Column(nullable = true)
     private LocalDate expiryDate;
 
-    @ManyToOne
-    @JoinColumn(name = "coach_id")
-    private Coach coach;
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CoachingContract> contracts = new ArrayList<>();
+
+    public Coach getCurrentCoach() {
+        return this.contracts.stream()
+                .filter(CoachingContract::isActive)
+                .map(CoachingContract::getCoach)
+                .findFirst()
+                .orElse(null);
+    }
 }
