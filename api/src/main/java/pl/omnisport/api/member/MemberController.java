@@ -20,7 +20,7 @@ public class MemberController {
     private final MemberService memberService;
 
     //CREATE
-    @PostMapping
+    @PostMapping("/add-new-member")
     @PreAuthorize("hasAnyRole('ADMIN', 'COACH')")
     public ResponseEntity<Void> addNewMember(@Valid @RequestBody MemberRegisterRequest request){
         memberService.saveNewMember(request);
@@ -28,26 +28,26 @@ public class MemberController {
     }
 
     //READ
-    @GetMapping
+    @GetMapping("/get-all-members")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Page<MemberResponse>> getAllMembers(Pageable pageable){
         return ResponseEntity.ok(memberService.getAllMembers(pageable));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id}/get-member-by-id")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<MemberResponse> getMemberById(@PathVariable Long id) throws EntityNotFoundException{
         return ResponseEntity.ok(memberService.getMemberById(id));
     }
 
     //UPDATE
-    @PutMapping("/{id}/section")
+    @PutMapping("/{id}/update-member-section")
     public ResponseEntity<Void> updateMembersSection(@PathVariable Long id, @Valid @RequestBody UpdateSectionRequest request){
         memberService.updateMembersSection(id, request.newSection());
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping("/{id}/extend-pass")
+    @PatchMapping("/{id}/extend-member-pass")
     @PreAuthorize("hasAnyRole('ADMIN', 'COACH')")
     public ResponseEntity<Void> extendPassValidity(@PathVariable Long id){
         try{
@@ -58,7 +58,7 @@ public class MemberController {
         }
     }
 
-    @PatchMapping("/{memberId}/coach/{newCoachId}")
+    @PatchMapping("/{memberId}/{newCoachId}/change-member-coach")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> changeMembersCoach(@PathVariable Long newCoachId, @PathVariable Long memberId){
         memberService.changeMembersCoach(newCoachId, memberId);
@@ -66,7 +66,7 @@ public class MemberController {
     }
 
     //DELETE
-    @DeleteMapping("/{id}")
+    @PatchMapping("/{id}/deactivate-member")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deactivateMember(@PathVariable Long id){
         memberService.deactivateMember(id);

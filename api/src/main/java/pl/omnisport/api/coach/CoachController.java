@@ -17,7 +17,7 @@ public class CoachController {
     private final CoachService coachService;
 
     //CREATE
-    @PostMapping
+    @PostMapping("/add-new-coach")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> addNewCoach(@Valid @RequestBody CoachRegisterRequest request){
         coachService.saveNewCoach(request);
@@ -25,18 +25,18 @@ public class CoachController {
     }
 
     //READ
-    @GetMapping
+    @GetMapping("/get-all-coaches")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Page<CoachResponse>> getAllCoaches(Pageable pageable){
         return ResponseEntity.ok(coachService.getAllCoaches(pageable));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id}/get-coach-by-id")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CoachResponse> getCoachById(@PathVariable Long id) throws EntityNotFoundException{
         return ResponseEntity.ok(coachService.getCoachById(id));
     }
-    @GetMapping("/{coachId}/mentees")
+    @GetMapping("/{coachId}/get-coach-mentees")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Page<MenteeResponse>> getCoachMentees(@PathVariable Long coachId, Pageable pageable) throws EntityNotFoundException{
         Page<MenteeResponse> menteesPage = coachService.getAllMentees(coachId, pageable);
@@ -44,14 +44,14 @@ public class CoachController {
     }
 
     //UPDATE
-    @PatchMapping("/{id}/specialization")
+    @PatchMapping("/{id}/update-specialization")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> updateSpecialization(@PathVariable Long id, @RequestBody UpdateSpecializationRequest request){
         coachService.updateCoachSpecialization(id, request.newSpecialization());
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping("/{coachId}/{memberId}/mentees")
+    @PatchMapping("/{coachId}/{memberId}/add-mentee")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> addMentee(@PathVariable Long coachId, @PathVariable Long memberId){
         coachService.addMenteeToCoach(coachId, memberId);
@@ -59,16 +59,16 @@ public class CoachController {
     }
 
     //DELETE
-    @DeleteMapping("/{coachId}/{memberId}/mentees")
+    @DeleteMapping("/{coachId}/{memberId}/remove-mentee")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> removeMentee(@PathVariable Long coachId, @PathVariable Long memberId){
         coachService.removeMenteeFromCoach(coachId, memberId);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{id}")
+    @PatchMapping("/{id}/deactivate-coach")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> deleteCoach(@PathVariable Long id){
+    public ResponseEntity<Void> deactivateCoach(@PathVariable Long id){
         coachService.deactivateCoach(id);
         return ResponseEntity.ok().build();
     }

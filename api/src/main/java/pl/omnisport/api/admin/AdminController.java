@@ -22,43 +22,43 @@ public class AdminController {
     private final AdminMapper adminMapper;
 
     //CREATE
-    @PostMapping("/addNewAdmin")
+    @PostMapping("/add-new-admin")
     public ResponseEntity<Void> addNewAdmin(@Valid @RequestBody AdminRegisterRequest request){
         adminService.registerNewAdmin(request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     //READ
-    @GetMapping("/getAllAdmins")
+    @GetMapping("/get-all-admins")
     public ResponseEntity<Page<AdminResponse>> getAllAdmins(Pageable pageable){
         return ResponseEntity.ok(adminService.getAllAdmins(pageable));
     }
 
-    @GetMapping("/getAdminById/{id}")
+    @GetMapping("/{id}/get-admin-by-id")
     public ResponseEntity<AdminResponse> getAdminById(@PathVariable Long id) throws EntityNotFoundException{
         return ResponseEntity.ok(adminService.findAdminById(id));
     }
 
-    @GetMapping("/getAdminByEmail")
+    @GetMapping("/get-admin-by-email")
     public ResponseEntity<AdminResponse> getAdminByEmail(@RequestParam String email) throws EntityNotFoundException{
         return ResponseEntity.ok(adminService.findAdminByEmail(email).map(adminMapper::toResponse).orElseThrow());
     }
 
     //UPDATE
-    @PatchMapping("/recordAdminLogin/{id}")
+    @PatchMapping("/{id}/record-admin-login")
     public ResponseEntity<Void> recordAdminLogin(@PathVariable Long id) throws EntityNotFoundException{
         adminService.recordLogin(id);
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping("/changeAdminRole/{id}/role")
+    @PatchMapping("/{id}/change-admin-role")
     public ResponseEntity<Void> changeAdminRole(@PathVariable Long id, @RequestBody AdminRole request) throws EntityNotFoundException{
         adminService.changeAdminRole(id, Admin.AdminRole.valueOf(request.newRole()));
         return ResponseEntity.ok().build();
     }
 
     //DELETE
-    @DeleteMapping("/deactivate/{targetId}")
+    @PatchMapping("/{targetId}/deactivate-admin")
     public ResponseEntity<Void> deactivateAdmin(@PathVariable Long targetId, @AuthenticationPrincipal AppUser currentUser) throws EntityNotFoundException {
         Long currentUserId = currentUser.getId();
         adminService.deactivateAdmin(targetId, currentUserId);
