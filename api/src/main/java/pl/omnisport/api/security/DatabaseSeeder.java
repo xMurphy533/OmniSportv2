@@ -9,6 +9,7 @@ import pl.omnisport.api.admin.Admin;
 import pl.omnisport.api.admin.AdminRepository;
 import pl.omnisport.api.coach.Coach;
 import pl.omnisport.api.coach.CoachRepository;
+import pl.omnisport.api.contracts.CoachingContract;
 import pl.omnisport.api.member.Member;
 import pl.omnisport.api.member.MemberRepository;
 import pl.omnisport.api.user.AppUser;
@@ -69,10 +70,16 @@ public class DatabaseSeeder implements CommandLineRunner {
             memberProfile.setSection("Kickboxing");
             memberProfile.setPassValid(true);
             memberProfile.setExpiryDate(LocalDate.now().plusMonths(1));
-            memberProfile.setCoach(coachProfile);
             memberProfile.setAppUser(memberAccount);
 
-            coachProfile.addMemberToList(memberProfile);
+            CoachingContract contract = new CoachingContract();
+            contract.setMember(memberProfile);
+            contract.setCoach(coachProfile);
+            contract.setStartDate(LocalDate.now());
+            contract.setActive(true);
+
+            memberProfile.getContracts().add(contract);
+
             coachRepository.save(coachProfile);
             memberRepository.save(memberProfile);
         }

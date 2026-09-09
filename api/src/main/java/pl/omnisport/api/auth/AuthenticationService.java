@@ -6,12 +6,16 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.omnisport.api.admin.AdminRepository;
+import pl.omnisport.api.contracts.CoachingContract;
 import pl.omnisport.api.member.Member;
 import pl.omnisport.api.member.MemberRepository;
 import pl.omnisport.api.security.JwtService;
 import pl.omnisport.api.user.AppUser;
 import pl.omnisport.api.user.AppUserRepository;
 import pl.omnisport.api.user.Role;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +41,8 @@ public class AuthenticationService {
         member.setSurname(request.getSurname());
         member.setAge(request.getAge());
         member.setSection(request.getSection());
-        member.setCoach(null);
+        List<CoachingContract> coachingContracts = new ArrayList<>();
+        member.setContracts(coachingContracts);
         member.setExpiryDate(null);
         member.setAppUser(appUser);
 
