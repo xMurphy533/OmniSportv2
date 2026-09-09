@@ -87,15 +87,17 @@ public class AdminService {
     }
 
     @org.springframework.transaction.annotation.Transactional
-    public void deactivateAdmin(Long targetId, Long currentAdminId){
-        if(targetId.equals(currentAdminId))
-            throw new SelfDeletionNotAllowedException("You cannot deactivate your account");
-
-        Admin admin = adminRepository.findById(targetId).orElseThrow(
+    public void deactivateAdmin(Long targetId, Long currentAppUserId) {
+        Admin targetAdmin = adminRepository.findById(targetId).orElseThrow(
                 () -> new EntityNotFoundException("Admin not found")
         );
-        admin.getAppUser().setActive(false);
-        adminRepository.save(admin);
+
+        if (targetAdmin.getAppUser().getId().equals(currentAppUserId)) {
+            throw new SelfDeletionNotAllowedException("You cannot deactivate your account");
+        }
+
+        targetAdmin.getAppUser().setActive(false);
+        adminRepository.save(targetAdmin);
     }
 
     @org.springframework.transaction.annotation.Transactional
