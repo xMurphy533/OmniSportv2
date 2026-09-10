@@ -18,5 +18,5 @@ public interface CoachingContractRepository extends JpaRepository<CoachingContra
     Page<CoachingContract> findOldContractsByCoachId(@Param("coachId") Long coachId, Pageable pageable);
 
     @Query("SELECT c FROM CoachingContract c WHERE c.member.id = :memberId AND c.isActive = true")
-    CoachingContract existByMemberIdAndIsActiveTrue(@Param("memberId") Long memberId);
+    Page<CoachingContract> findAllByMemberIdAndIsActiveTrue(@Param("memberId") Long memberId, Pageable pageable);
 }

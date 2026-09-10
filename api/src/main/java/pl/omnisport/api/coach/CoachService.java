@@ -110,15 +110,12 @@ public class CoachService {
         Coach coach = coachRepository.findById(coachId).orElseThrow(
                 () -> new EntityNotFoundException("Coach not found")
         );
-        mentee.getContracts().stream()
-                .filter(CoachingContract::isActive)
-                .findFirst()
-                .ifPresent(activeContract -> {
-                    if(activeContract.getCoach().getId().equals(coachId))
-                        throw new IllegalStateException("Member is already signed to this coach");
-                    activeContract.setActive(false);
-                    activeContract.setEndDate(LocalDate.now());
-                });
+        boolean alreadyTrainsWithThisCoach = mentee.getContracts().stream()
+                .anyMatch(contract -> contract.isActive() && contract.getCoach().getId().equals(coachId));
+
+        if(alreadyTrainsWithThisCoach) {
+            throw new IllegalStateException("Member is already signed to this coach");
+        }
 
         CoachingContract newContract = coachingContractService.createContract(coachId, memberId);
 
@@ -137,7 +134,7 @@ public class CoachService {
         CoachingContract activeContract = mentee.getContracts().stream()
                 .filter(contract -> contract.isActive() && contract.getCoach().getId().equals(coachId))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("This member doesn't belong to any coach"));
+                .orElseThrow(() -> new IllegalArgumentException("This member doesn't have an active contract with this coach"));
 
         activeContract.setActive(false);
         activeContract.setEndDate(LocalDate.now());
