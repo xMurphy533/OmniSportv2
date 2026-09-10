@@ -115,7 +115,7 @@ public class MemberService {
         );
     }
 
-    public MemberResponse getMemberById(Long memberId){
+    public MemberGetByIdResponse getMemberById(Long memberId){
         Member member = memberRepository.findById(memberId).orElseThrow(
                 () -> new EntityNotFoundException("Member not found")
         );
@@ -133,12 +133,15 @@ public class MemberService {
                 coach.getAppUser().isActive()
         );
 
-        return new MemberResponse(
+        return new MemberGetByIdResponse(
                 member.getId(),
                 member.getName(),
                 member.getSurname(),
+                member.getAge(),
                 member.getSection(),
                 coachResponse,
+                member.isPassValid(),
+                member.getExpiryDate(),
                 memberActive
         );
     }

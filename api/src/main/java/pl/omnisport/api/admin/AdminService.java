@@ -66,15 +66,17 @@ public class AdminService {
         );
     }
 
-    public AdminResponse findAdminById(Long id){
+    public AdminGetByIdResponse findAdminById(Long id){
         Admin admin = adminRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Admin not found")
         );
-        return new AdminResponse(
+        return new AdminGetByIdResponse(
                 admin.getId(),
                 admin.getName(),
                 admin.getSurname(),
                 admin.getAdminRole(),
+                admin.getCreatedAt(),
+                admin.getLastLoginAt(),
                 admin.getAppUser().isActive()
         );
     }

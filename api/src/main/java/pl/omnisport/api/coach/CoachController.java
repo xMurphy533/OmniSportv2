@@ -33,7 +33,7 @@ public class CoachController {
 
     @GetMapping("/{id}/get-coach-by-id")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<CoachResponse> getCoachById(@PathVariable Long id) throws EntityNotFoundException{
+    public ResponseEntity<CoachGetByIdResponse> getCoachById(@PathVariable Long id) throws EntityNotFoundException{
         return ResponseEntity.ok(coachService.getCoachById(id));
     }
     @GetMapping("/{coachId}/get-coach-mentees")

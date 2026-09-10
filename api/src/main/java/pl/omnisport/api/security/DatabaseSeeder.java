@@ -60,6 +60,7 @@ public class DatabaseSeeder implements CommandLineRunner {
             Coach coachProfile = new Coach();
             coachProfile.setName("Przemysław");
             coachProfile.setSurname("Zbiciak");
+            coachProfile.setAge(37);
             coachProfile.setSpecialization("MMA, BJJ, Kickboxing");
             coachProfile.setAppUser(coachAccount);
 

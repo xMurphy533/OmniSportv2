@@ -69,14 +69,15 @@ public class CoachService {
         );
     }
 
-    public CoachResponse getCoachById(Long id) {
+    public CoachGetByIdResponse getCoachById(Long id) {
         Coach coach = coachRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Coach not found")
         );
-        return new CoachResponse(
+        return new CoachGetByIdResponse(
                 coach.getId(),
                 coach.getName(),
                 coach.getSurname(),
+                coach.getAge(),
                 coach.getSpecialization(),
                 coach.getAppUser().isActive()
         );
