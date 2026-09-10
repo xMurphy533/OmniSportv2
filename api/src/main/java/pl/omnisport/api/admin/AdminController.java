@@ -35,7 +35,7 @@ public class AdminController {
     }
 
     @GetMapping("/{id}/get-admin-by-id")
-    public ResponseEntity<AdminResponse> getAdminById(@PathVariable Long id) throws EntityNotFoundException{
+    public ResponseEntity<AdminGetByIdResponse> getAdminById(@PathVariable Long id) throws EntityNotFoundException{
         return ResponseEntity.ok(adminService.findAdminById(id));
     }
 

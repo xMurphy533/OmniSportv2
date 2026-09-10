@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import org.springframework.data.domain.Pageable;
+import pl.omnisport.api.attendance.AttendanceService;
 import pl.omnisport.api.auth.MemberRegisterRequest;
 import pl.omnisport.api.contracts.OldCoachingContractResponse;
 
@@ -19,6 +20,7 @@ import pl.omnisport.api.contracts.OldCoachingContractResponse;
 @RequiredArgsConstructor
 public class MemberController {
     private final MemberService memberService;
+    private final AttendanceService attendanceService;
 
     //CREATE
     @PostMapping("/add-new-member")
@@ -37,7 +39,7 @@ public class MemberController {
 
     @GetMapping("/{id}/get-member-by-id")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<MemberResponse> getMemberById(@PathVariable Long id) throws EntityNotFoundException{
+    public ResponseEntity<MemberGetByIdResponse> getMemberById(@PathVariable Long id) throws EntityNotFoundException{
         return ResponseEntity.ok(memberService.getMemberById(id));
     }
 
@@ -58,6 +60,13 @@ public class MemberController {
     @PreAuthorize("hasAnyRole('ADMIN', 'COACH')")
     public ResponseEntity<Void> extendPassValidity(@PathVariable Long id){
         memberService.extendPassValidity(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("{memberId}/register-check-in")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> registerCheckIn(@PathVariable Long memberId){
+        attendanceService.registerCheckIn(memberId);
         return ResponseEntity.ok().build();
     }
 
