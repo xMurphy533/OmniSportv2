@@ -17,11 +17,15 @@ import pl.omnisport.api.contracts.CoachingContract;
 import pl.omnisport.api.contracts.CoachingContractRepository;
 import pl.omnisport.api.contracts.CoachingContractService;
 import pl.omnisport.api.contracts.OldCoachingContractResponse;
+import pl.omnisport.api.payment.Payment;
+import pl.omnisport.api.payment.PaymentRepository;
 import pl.omnisport.api.user.AppUser;
 import pl.omnisport.api.user.AppUserRepository;
 import pl.omnisport.api.user.Role;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +37,7 @@ public class MemberService {
     private final CoachingContractRepository coachingContractRepository;
     private final CoachingContractService coachingContractService;
     private final CoachMapper coachMapper;
+    private final PaymentRepository paymentRepository;
 
     @Transactional
     public void saveNewMember(MemberRegisterRequest request) {
@@ -174,12 +179,19 @@ public class MemberService {
         }
     }
 
-    public void extendPassValidity(Long memberId){
+    public void extendPassValidity(Long memberId, BigDecimal amount){
         Member member = memberRepository.findById(memberId).orElseThrow(
                 () -> new EntityNotFoundException("Member not found"));
 
-        LocalDate newDatePassValidity = LocalDate.now().plusMonths(1);
+        Payment payment = new Payment();
+        payment.setMember(member);
+        payment.setAmount(amount);
+        payment.setPaymentDate(LocalDateTime.now());
+        paymentRepository.save(payment);
+
+        LocalDate newDatePassValidity = member.getExpiryDate().isAfter(LocalDate.now()) ? member.getExpiryDate().plusMonths(1) : LocalDate.now().plusMonths(1);
         member.setExpiryDate(newDatePassValidity);
+        member.setPassValid(true);
         memberRepository.save(member);
     }
 

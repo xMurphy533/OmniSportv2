@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import pl.omnisport.api.attendance.AttendanceService;
 import pl.omnisport.api.auth.MemberRegisterRequest;
 import pl.omnisport.api.contracts.OldCoachingContractResponse;
+import pl.omnisport.api.payment.PaymentRequest;
 
 @RestController
 @RequestMapping("/api/members")
@@ -58,8 +59,8 @@ public class MemberController {
 
     @PatchMapping("/{id}/extend-member-pass")
     @PreAuthorize("hasAnyRole('ADMIN', 'COACH')")
-    public ResponseEntity<Void> extendPassValidity(@PathVariable Long id){
-        memberService.extendPassValidity(id);
+    public ResponseEntity<Void> extendPassValidity(@PathVariable Long id, @RequestBody PaymentRequest request){
+        memberService.extendPassValidity(id, request.amount());
         return ResponseEntity.ok().build();
     }
 
