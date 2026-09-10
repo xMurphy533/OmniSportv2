@@ -38,6 +38,6 @@ public class CoachingContract {
     @Column(name = "end_date", nullable = true)
     private LocalDate endDate;
 
-    @Column(name = "isActive")
+    @Column(name = "is_active")
     private boolean isActive;
 }
