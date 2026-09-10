@@ -50,12 +50,8 @@ public class MemberController {
     @PatchMapping("/{id}/extend-member-pass")
     @PreAuthorize("hasAnyRole('ADMIN', 'COACH')")
     public ResponseEntity<Void> extendPassValidity(@PathVariable Long id){
-        try{
-            memberService.extendPassValidity(id);
-            return ResponseEntity.noContent().build();
-        } catch (EntityNotFoundException e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Member not found");
-        }
+        memberService.extendPassValidity(id);
+        return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/{memberId}/{newCoachId}/change-member-coach")
