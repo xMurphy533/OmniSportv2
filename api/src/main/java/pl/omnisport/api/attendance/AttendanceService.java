@@ -2,6 +2,8 @@ package pl.omnisport.api.attendance;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.omnisport.api.member.Member;
@@ -37,5 +39,25 @@ public class AttendanceService {
         attendance.setCheckInTime(LocalDateTime.now());
 
         attendanceRepository.save(attendance);
+    }
+
+    public Page<AttendanceResponse> getAttendanceHistory(LocalDate startDate, LocalDate endDate, Pageable pageable) {
+        Page<Attendance> attendances;
+
+        if (startDate != null && endDate != null) {
+            LocalDateTime start = startDate.atStartOfDay();
+            LocalDateTime end = endDate.atTime(java.time.LocalTime.MAX);
+            attendances = attendanceRepository.findAllByCheckInTimeBetween(start, end, pageable);
+        } else {
+            attendances = attendanceRepository.findAll(pageable);
+        }
+
+        return attendances.map(attendance -> new AttendanceResponse(
+                attendance.getId(),
+                attendance.getCheckInTime(),
+                attendance.getMember().getId(),
+                attendance.getMember().getName(),
+                attendance.getMember().getSurname()
+        ));
     }
 }
