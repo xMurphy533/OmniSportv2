@@ -53,10 +53,240 @@
         {
           "name": "2. Authenticate",
           "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"szef@omnisport.pl\",\r\n    \"password\": \"password123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/auth/authenticate",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "auth",
+                "authenticate"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admins",
+      "item": [
+        {
+          "name": "1. Get all admins",
+          "request": {
             "method": "GET",
             "header": [],
             "url": {
               "raw": ""
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2. Add new admin",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"Adam\",\r\n  \"surname\": \"Psikuta\",\r\n  \"email\": \"psichuj@omnisport.pl\",\r\n  \"password\": \"KochamPIS123\",\r\n  \"role\": \"MODERATOR\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/admins",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "admins"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3. Change admin's role",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"newRole\": \"MODERATOR\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/admins/1/role",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "admins",
+                "1",
+                "role"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "4. Record admin login",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "text"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/admins/1/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "admins",
+                "1",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "5. Get admin by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": ""
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "6. Get payments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": ""
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "7. Get attendance",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": ""
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "8. Deactivate admin by ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "text"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/admins/deactivate/2",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "admins",
+                "deactivate",
+                "2"
+              ]
             }
           },
           "response": []
@@ -80,10 +310,38 @@
         {
           "name": "2. Add new coach",
           "request": {
-            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
             "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"Dawid\",\r\n  \"surname\": \"Pepłowski\",\r\n  \"email\": \"peplowski@omnisport.pl\",\r\n  \"password\": \"dawid32\",\r\n  \"age\": 32,\r\n  \"specialization\": \"MMA\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
             "url": {
-              "raw": ""
+              "raw": "http://localhost:8080/api/coaches",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "coaches"
+              ]
             }
           },
           "response": []
@@ -91,10 +349,40 @@
         {
           "name": "3. Update coach's specialization",
           "request": {
-            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
             "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"newSpecialization\": \"BJJ\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
             "url": {
-              "raw": ""
+              "raw": "http://localhost:8080/api/coaches/{id}/specialization",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "coaches",
+                "{id}",
+                "specialization"
+              ]
             }
           },
           "response": []
@@ -102,6 +390,120 @@
         {
           "name": "4. Get coach by ID",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "text"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/coaches/3",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "coaches",
+                "3"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "5. Get coach's mentees",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/coaches/1/mentees",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "coaches",
+                "1",
+                "mentees"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "6. Add mentee to coach",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "text"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/coaches/1/2/mentees",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "coaches",
+                "1",
+                "2",
+                "mentees"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "7. Get past member's coaches",
+          "request": {
             "method": "GET",
             "header": [],
             "url": {
@@ -111,12 +513,52 @@
           "response": []
         },
         {
-          "name": "4. Delete coach by ID",
+          "name": "8. Remove member from coach mentees",
           "request": {
             "method": "GET",
             "header": [],
             "url": {
               "raw": ""
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "8. Deactivate coach by ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "text"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/coaches/2",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "coaches",
+                "2"
+              ]
             }
           },
           "response": []
@@ -166,12 +608,40 @@
           "response": []
         },
         {
-          "name": "2. Save new member",
+          "name": "2. Add new member",
           "request": {
-            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
             "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"Volodymyr\",\r\n  \"surname\": \"Mokhun\",\r\n  \"age\": 19,\r\n  \"email\": \"mokhun12@omnisport.pl\",\r\n  \"password\": \"kochambjj123\",\r\n  \"section\": \"BJJ\",\r\n  \"passValidity\": true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
             "url": {
-              "raw": ""
+              "raw": "http://localhost:8080/api/members",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "members"
+              ]
             }
           },
           "response": []
@@ -179,10 +649,31 @@
         {
           "name": "3. Extend user's pass validity",
           "request": {
-            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
             "header": [],
             "url": {
-              "raw": ""
+              "raw": "http://localhost:8080/api/members/{id}/extend-pass",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "members",
+                "{id}",
+                "extend-pass"
+              ]
             }
           },
           "response": []
@@ -190,54 +681,45 @@
         {
           "name": "4. Get member by ID",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
             "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "text"
+                }
+              }
+            },
             "url": {
-              "raw": ""
+              "raw": "http://localhost:8080/api/members/{id}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "members",
+                "{id}"
+              ]
             }
           },
           "response": []
         },
         {
-          "name": "5. Delete member by ID",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": ""
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Admins",
-      "item": [
-        {
-          "name": "1. Get all admins",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": ""
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "2. Add new admin",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": ""
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "3. Change admin's role",
+          "name": "5. Update members section",
           "request": {
             "method": "GET",
             "header": [],
@@ -248,7 +730,7 @@
           "response": []
         },
         {
-          "name": "4. Record admin login",
+          "name": "6. Get past coach's mentees",
           "request": {
             "method": "GET",
             "header": [],
@@ -259,7 +741,7 @@
           "response": []
         },
         {
-          "name": "5. Get admin by ID",
+          "name": "7. Get currrent contracts",
           "request": {
             "method": "GET",
             "header": [],
@@ -270,12 +752,82 @@
           "response": []
         },
         {
-          "name": "6. Delete admin by ID",
+          "name": "8. Register check in",
           "request": {
-            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
             "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "text"
+                }
+              }
+            },
             "url": {
-              "raw": ""
+              "raw": "http://localhost:8080/api/members/{memberId}/register-check-in",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "members",
+                "{memberId}",
+                "register-check-in"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "9. Deactivate member by ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "text"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/members/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "members",
+                "1"
+              ]
             }
           },
           "response": []
