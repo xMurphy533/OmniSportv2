@@ -12,6 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import org.springframework.data.domain.Pageable;
 import pl.omnisport.api.auth.MemberRegisterRequest;
+import pl.omnisport.api.contracts.OldCoachingContractResponse;
 
 @RestController
 @RequestMapping("/api/members")
@@ -40,6 +41,12 @@ public class MemberController {
         return ResponseEntity.ok(memberService.getMemberById(id));
     }
 
+    @GetMapping("/{memberId}/get-current-contracts")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Page<OldCoachingContractResponse>> getCurrentMemberContracts(@PathVariable Long memberId, Pageable pageable) throws EntityNotFoundException{
+        return  ResponseEntity.ok(memberService.getCurrentMemberContracts(memberId, pageable));
+    }
+
     //UPDATE
     @PutMapping("/{id}/update-member-section")
     public ResponseEntity<Void> updateMembersSection(@PathVariable Long id, @Valid @RequestBody UpdateSectionRequest request){
@@ -51,13 +58,6 @@ public class MemberController {
     @PreAuthorize("hasAnyRole('ADMIN', 'COACH')")
     public ResponseEntity<Void> extendPassValidity(@PathVariable Long id){
         memberService.extendPassValidity(id);
-        return ResponseEntity.ok().build();
-    }
-
-    @PatchMapping("/{memberId}/{newCoachId}/change-member-coach")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> changeMembersCoach(@PathVariable Long newCoachId, @PathVariable Long memberId){
-        memberService.changeMembersCoach(newCoachId, memberId);
         return ResponseEntity.ok().build();
     }
 

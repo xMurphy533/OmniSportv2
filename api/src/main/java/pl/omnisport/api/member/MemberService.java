@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.omnisport.api.auth.MemberRegisterRequest;
 import pl.omnisport.api.coach.Coach;
+import pl.omnisport.api.coach.CoachMapper;
 import pl.omnisport.api.coach.CoachRepository;
 
 import org.springframework.data.domain.Pageable;
@@ -15,6 +16,7 @@ import pl.omnisport.api.coach.CoachResponse;
 import pl.omnisport.api.contracts.CoachingContract;
 import pl.omnisport.api.contracts.CoachingContractRepository;
 import pl.omnisport.api.contracts.CoachingContractService;
+import pl.omnisport.api.contracts.OldCoachingContractResponse;
 import pl.omnisport.api.user.AppUser;
 import pl.omnisport.api.user.AppUserRepository;
 import pl.omnisport.api.user.Role;
@@ -30,6 +32,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final CoachingContractRepository coachingContractRepository;
     private final CoachingContractService coachingContractService;
+    private final CoachMapper coachMapper;
 
     @Transactional
     public void saveNewMember(MemberRegisterRequest request) {
@@ -177,25 +180,29 @@ public class MemberService {
         memberRepository.save(member);
     }
 
-    @Transactional
-    public void changeMembersCoach(Long newCoachId, Long memberId){
-        Coach newCoach = coachRepository.findById(newCoachId).orElseThrow(
-                () -> new EntityNotFoundException("Coach not found")
-        );
-        Member mentee = memberRepository.findById(memberId).orElseThrow(
+    public Page<OldCoachingContractResponse> getCurrentMemberContracts(Long memberId, Pageable pageable){
+        Member member = memberRepository.findById(memberId).orElseThrow(
                 () -> new EntityNotFoundException("Member not found")
         );
+        Page<CoachingContract> memberContractPage = coachingContractRepository.findAllByMemberIdAndIsActiveTrue(memberId, pageable);
 
-        mentee.getContracts().stream()
-                .filter(CoachingContract::isActive)
-                .findFirst()
-                .ifPresent(activeContract -> {
-                    activeContract.setActive(false);
-                    activeContract.setEndDate(LocalDate.now());
-                });
+        return memberContractPage.map(
+                memberContract -> {
+                    CoachResponse coachResponse = new CoachResponse(
+                            memberContract.getCoach().getId(),
+                            memberContract.getCoach().getName(),
+                            memberContract.getCoach().getSurname(),
+                            memberContract.getCoach().getSpecialization(),
+                            memberContract.getCoach().getAppUser().isActive()
+                    );
 
-        CoachingContract newContract = coachingContractService.createContract(newCoachId, memberId);
-
-        mentee.getContracts().add(newContract);
+                    return new OldCoachingContractResponse(
+                            memberContract.getId(),
+                            coachResponse,
+                            memberContract.getStartDate(),
+                            null
+                    );
+                }
+        );
     }
 }
