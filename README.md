@@ -34,9 +34,9 @@ docker compose up --build -d
     "email": "szef@omnisport.pl",
     "password": "password123"
 }
-
 ```
-6. To stop the containers, run:
+6. Copy the jwt token to the variables tab and save it.
+7. To stop the containers, run:
 ```bash
 docker compose down 
 ```
