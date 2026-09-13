@@ -36,7 +36,8 @@ docker compose up --build -d
 }
 ```
 6. Copy the jwt token to the variables tab and save it.
-7. To stop the containers, run:
+7. Now it's possible to use all OmniSport functions.
+8. To stop the containers, run:
 ```bash
 docker compose down 
 ```
