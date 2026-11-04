@@ -12,6 +12,11 @@ jobs:
     services:
       postgres:
         image: postgres:15
+        # TEN BLOK JEST WYMAGANY PRZEZ KONTENER POSTGRESQL:
+        env:
+          POSTGRES_DB: omnisport
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
         ports:
           - 5432:5432
         options: >-
