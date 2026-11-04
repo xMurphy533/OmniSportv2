@@ -41,4 +41,12 @@ jobs:
 
       - name: Kompilacja i uruchomienie testów
         working-directory: ./api
-        run: ./mvnw clean test
+        run: >
+          ./mvnw clean test 
+          -Dspring.profiles.active=test 
+          -Dspring.datasource.url=jdbc:postgresql://localhost:5432/omnisport 
+          -Dspring.datasource.username=postgres 
+          -Dspring.datasource.password=password
+          -Dspring.flyway.url=jdbc:postgresql://localhost:5432/omnisport
+          -Dspring.flyway.user=postgres
+          -Dspring.flyway.password=password
