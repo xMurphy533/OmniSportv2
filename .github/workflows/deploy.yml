@@ -1,0 +1,31 @@
+name: Deploy Omnisport
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pobranie kodu
+        uses: actions/checkout@v3
+
+      - name: Konfiguracja Java 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Nadanie uprawnień do mvnw
+        working-directory: ./api
+        run: chmod +x mvnw
+
+      - name: Budowanie pliku JAR
+        working-directory: ./api
+        run: ./mvnw clean package -DskipTests
+
+      # miejsce na krok, który np. łączy się przez SSH z naszym VPS-em i wgrywa
+      # nasz wynikowy plik .jar
