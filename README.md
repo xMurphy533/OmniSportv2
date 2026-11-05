@@ -28,7 +28,7 @@ The project uses **GitHub Actions** to automate testing and building processes:
 * **Package (Push to `main`):** Compiles the application and generates a production-ready `.jar` artifact.
 
 ### Testcontainers
-The project leverages **Testcontainers** for robust integration testing, ensuring zero-mock confidence.
+The project uses **Testcontainers** for robust integration testing, ensuring zero-mock confidence.
 
 ### Getting started
 Make sure you have Docker and Postman installed
