@@ -20,7 +20,7 @@ import pl.omnisport.api.user.AppUser;
 @RestController
 @RequestMapping("/api/admins")
 @PreAuthorize("hasRole('ADMIN')")
-@Tag(name="Admins", description = "Menaging admins account")
+@Tag(name="Admins", description = "Managing admins account")
 public class AdminController {
     private final AdminService adminService;
     private final AdminMapper adminMapper;

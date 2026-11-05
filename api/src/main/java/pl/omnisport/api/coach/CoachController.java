@@ -16,7 +16,7 @@ import pl.omnisport.api.auth.CoachRegisterRequest;
 @RestController
 @RequestMapping("/api/coaches")
 @RequiredArgsConstructor
-@Tag(name="Coaches", description = "Menaging coach accounts")
+@Tag(name="Coaches", description = "Managing coach accounts")
 public class CoachController {
     private final CoachService coachService;
 

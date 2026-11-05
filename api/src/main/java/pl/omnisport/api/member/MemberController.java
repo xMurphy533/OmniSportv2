@@ -21,7 +21,7 @@ import pl.omnisport.api.payment.PaymentRequest;
 @RestController
 @RequestMapping("/api/members")
 @RequiredArgsConstructor
-@Tag(name="Members", description = "Member manegement")
+@Tag(name="Members", description = "Member management")
 public class MemberController {
     private final MemberService memberService;
     private final AttendanceService attendanceService;

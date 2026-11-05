@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/contracts")
 @RequiredArgsConstructor
-@Tag(name="Coaching contract menagement")
+@Tag(name="Coaching contract management")
 public class CoachingContractController {
     private final CoachingContractService coachingContractService;
 

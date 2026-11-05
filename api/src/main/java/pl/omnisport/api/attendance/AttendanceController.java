@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @RestController
 @RequestMapping("/api/attendances")
 @RequiredArgsConstructor
-@Tag(name="Attendances", description = "Attendance manegement")
+@Tag(name="Attendances", description = "Attendance management")
 public class AttendanceController {
 
     private final AttendanceService attendanceService;
