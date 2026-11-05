@@ -20,12 +20,15 @@ Backend API for a comprehensive ERP system for managing a martial arts club. Des
 - Authorization and login
 - Global exception handler
 
-## CI/CD Pipeline
+### CI/CD Pipeline
 
 The project uses **GitHub Actions** to automate testing and building processes:
 
 * **Build & Test (Pull Requests):** Automatically provisions a PostgreSQL service container, sets up Java 17, and runs all Maven tests to ensure code quality before merging.
 * **Package (Push to `main`):** Compiles the application and generates a production-ready `.jar` artifact.
+
+### Testcontainers
+The project leverages **Testcontainers** for robust integration testing, ensuring zero-mock confidence.
 
 ### Getting started
 Make sure you have Docker and Postman installed
