@@ -19,6 +19,7 @@ Backend API for a comprehensive ERP system for managing a martial arts club. Des
 - Relations between entities
 - Authorization and login
 - Global exception handler
+- OpenAPI and UI using Swagger
 
 ### CI/CD Pipeline
 
@@ -30,28 +31,17 @@ The project uses **GitHub Actions** to automate testing and building processes:
 ### Testcontainers
 The project uses **Testcontainers** for robust integration testing, ensuring zero-mock confidence.
 
-### Getting started
-Make sure you have Docker and Postman installed
-1. Clone the repository
-2. Build and start the application
-```bash
-docker compose up --build -d 
-```
-3. The application will be up running at `http://localhost:8080`
-4. Open Postman and import JSON file (api/postman/OMNISPORT API.postman_collection.json)
-5. Log in as an admin by sending JSON in the OMNISPORT API/Auth/2. Authenticate
-```
-{
-    "email": "szef@omnisport.pl",
-    "password": "password123"
-}
-```
-6. Copy the jwt token to the variables tab and save it.
-7. Now it's possible to use all OmniSport functions.
-8. To stop the containers, run:
-```bash
-docker compose down 
-```
+### Getting Started & API Documentation
+
+After running the application locally on port `8081`, interactive API documentation and testing tools are available out of the box:
+
+* **Swagger UI:** `http://localhost:8081/swagger-ui/index.html`
+* **OpenAPI Spec:** `http://localhost:8081/v3/api-docs`
+
+> **Note on Authentication:** Secured endpoints require a JWT token. Obtain the token via `/api/auth/login` and provide it in Swagger UI using the **Authorize** button (`Bearer <token>`).
+
+### Manual Testing with Postman
+If you prefer testing endpoints using Postman, you can directly import the JSON file `api/postman/OMNISPORT API.postman_collection.json`.
 
 ### Database Structure
 ![OmniSport](docs/omnisport2.drawio.png)
