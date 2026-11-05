@@ -38,7 +38,7 @@ After running the application locally on port `8081`, interactive API documentat
 * **Swagger UI:** `http://localhost:8081/swagger-ui/index.html`
 * **OpenAPI Spec:** `http://localhost:8081/v3/api-docs`
 
-> **Note on Authentication:** Secured endpoints require a JWT token. Obtain the token via `/api/auth/login` and provide it in Swagger UI using the **Authorize** button (`Bearer <token>`).
+> **Note on Authentication:** Secured endpoints require a JWT token. Obtain the token via `/api/auth/authenticate` and provide it in Swagger UI using the **Authorize** button (`Bearer <token>`).
 
 ### Manual Testing with Postman
 If you prefer testing endpoints using Postman, you can directly import the JSON file `api/postman/OMNISPORT API.postman_collection.json`.
